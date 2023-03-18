@@ -1,0 +1,218 @@
+.container {
+    width: 100%;
+}
+
+.myHeader {
+    width: 100%;
+    height: auto;
+    background-color: #3f6fb6;
+}
+
+
+.logo {
+    width: 10%;
+    height: auto;
+    float: left;
+}
+
+.logo img {
+    max-width: 100%;
+    height: auto;
+
+    margin-top: 20px;
+}
+
+.nav {
+    display: inline-block;
+
+}
+
+.nav ul {
+
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-transform: uppercase;
+
+}
+
+.nav li {
+    float: left;
+}
+
+.nav li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 35px 16px;
+    text-decoration: none;
+}
+
+.myBody{
+    width: 100%;
+}
+
+.boxSearch {
+    padding: 25px 16px;
+    float: right;
+}
+
+.myContent {
+    width: 100%;
+    height: 600px;
+
+    border-bottom: 1px solid gainsboro;
+}
+
+.boxLeft {
+    width: 55%;
+    height: 600px;
+    float: left;
+}
+
+.boxCenter {
+    width: 20%;
+    background-color: white;
+    float: left;
+    height: 600px;
+    background: url(/img/bg-teaser2.png) center bottom no-repeat;
+}
+
+.boxRight {
+    width: 25%;
+    height: 600px;
+    float: left;
+}
+
+.myContent .monthStart {
+    width: 100%;
+    height: 200px;
+    background-color: white;
+    border-left: 1px solid gainsboro;
+    border-bottom: 1px solid gainsboro;
+}
+
+.monthActive {
+    width: 100%;
+    height: 200px;
+    background-color: #2d405e;
+    color: white;
+}
+
+
+.myContent .monthStart:hover {
+
+    color: white;
+    height: 200px;
+    background-color: #2d405e;
+
+}
+
+
+.grid-container {
+    display: grid;
+
+    align-content: center;
+    grid-template-columns: auto auto auto auto auto;
+    gap: 10px;
+    background-color: white;
+    padding: 30px;
+}
+
+.grid-container .cards {
+
+    background: url('/img/bg-box-front.png') left bottom no-repeat rgb(47, 54, 59);
+    text-align: center;
+
+    font-size: 20px;
+    height: 450px;
+    color: grey;
+
+}
+
+.btnDownload {
+    margin-top: 20px;
+}
+
+.btnDownload span {
+    border: 1px solid grey;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.timeShow span {
+    position: absolute;
+    margin-top: -68px;
+    margin-left: -126px;
+    background-color: rgba(47, 54, 59, 0.76);
+    padding-left: 27px;
+    padding-right: 27px;
+    color: white;
+
+}
+
+.footer {
+    padding: 30px;
+    background-color: #2f363b;
+    color: white;
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: left;
+
+
+}
+
+.flex-item-left {
+
+    padding: 10px;
+    flex: 40%;
+    box-sizing: border-box;
+
+}
+
+.flex-item-center {
+
+    padding: 10px;
+    flex: 40%;
+    box-sizing: border-box;
+}
+
+.flex-item-right {
+
+    padding: 10px;
+    flex: 20%;
+    box-sizing: border-box;
+}
+
+
+.grid-movies {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+    background-color: white;
+
+}
+
+.grid-movies>div {
+    background-color: #2f363b;
+    text-align: center;
+    padding: 0px;
+
+}
+
+.grid-movies>div img {
+    width: 100px;
+}
+
+.boxEmail {
+    background: white;
+    color: gray;
+    padding: 8px;
+    border: 1px solid gray;
+    border-radius: 5px;
+}
