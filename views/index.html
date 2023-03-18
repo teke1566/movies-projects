@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    function saveData(){
+        $.ajax('/api/login',{
+            "type":"POST",
+            "data": {
+                username: $("#username").val(),
+                profilepic: $("#profilepic").val()
+            }
+        }).done(function(data){
+            console.log(data)
+        }).fail(function(err){
+            console.log(err)
+        })
+    }
+</script>
+
+<body>
+    <form action="/api/login" method="post" enctype="multipart/form-data">
+        <label for="">User Name: <input type="text" name="usename" id="username"/></label>
+        <label for="">Image: <input type="file" name="profilepic" id="profilepic"></label>
+        <button type="button" onclick="saveData()">Save</button>
+    </form>
+</body>
+</html>
