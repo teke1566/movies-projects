@@ -13,7 +13,6 @@ userRouter.use(session({
  
 userRouter.use(flash());
 userRouter.get('/users/logout', (req, res) => {
-  // res.clearCookie('loggedIn');
    res.clearCookie('email');
    res.clearCookie('password'); 
    res.redirect('/users/login');
