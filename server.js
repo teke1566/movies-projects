@@ -10,8 +10,9 @@ app.use(express.static('public'));
 const cookieParser = require("cookie-parser");
 
 //const homeRoute = require('./controller.js')
-var testRoute = require("./controller/controller");
+//var testRoute = require("./controller/controller");
 var homeRoute = require("./controller/homeController");
+var adminRoute = require("./controller/adminController");
 
 //Read the parameters from post request
 app.use(cookieParser());
@@ -24,6 +25,7 @@ app.listen(3000,(req,res,next)=>{
 
 
 
-app.use(testRoute);
+//app.use(testRoute);
 app.use(homeRoute);
+app.use(adminRoute);
 
