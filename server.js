@@ -27,8 +27,9 @@ app.use(express.static('public'));
 
 
 //const homeRoute = require('./controller.js')
-var testRoute = require("./controller/controller");
+//var testRoute = require("./controller/controller");
 var homeRoute = require("./controller/homeController");
+var adminRoute = require("./controller/adminController");
 
 //Read the parameters from post request
 app.use(cookieParser());
@@ -48,8 +49,9 @@ app.use("/users/dashboard",router)
 app.use("/users/logout",router)
 
 
-app.use(testRoute);
+//app.use(testRoute);
 app.use(homeRoute);
+app.use(adminRoute);
 
 
 app.listen(2000,(req,res,next)=>{
