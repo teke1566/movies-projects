@@ -16,21 +16,29 @@
 </style>
 
 <body>
+    <h2>Login</h2>
+    <ul>
+      <% if(messages.success_msg) { %>
+      <li><%= messages.success_msg %></li>
+      <% } %>
+    </ul>
     <div id="login-form-wrap">
         <h2>Login</h2>
-        <form id="login-form" method="post" action="/login">
+        <form id="login-form" method="post" action="/users/login">
             <p>
-            <input type="text" id="username" name="username" placeholder="Username" required><i class="validation"><span></span><span></span></i>
-            </p>
+                <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
+                </p>
             <p>
-            <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
+            <input type="password" id="password" name="password" placeholder="password" required><i class="validation"><span></span><span></span></i>
             </p>
+            
             <p>
             <input type="submit" id="login" value="Login">
             </p>
+            
         </form>
         <div id="create-account-wrap">
-            <p>Not a member? <a href="#">Create Account</a><p>
+            <p>Not a member? <a href="/users/register">Register</a></a><p>
         </div><!--create-account-wrap-->
     </div>   
 </body>
