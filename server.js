@@ -29,6 +29,7 @@ app.use(express.static('public'));
 //const homeRoute = require('./controller.js')
 //var testRoute = require("./controller/controller");
 var homeRoute = require("./controller/homeController");
+var movieDetailRoute = require("./controller/moviedetailController");
 var adminRoute = require("./controller/adminController");
 
 //Read the parameters from post request
@@ -58,4 +59,9 @@ app.listen(2000,(req,res,next)=>{
     console.log("server is running 2000")
 })
 
+
+
+app.use(testRoute);
+app.use(homeRoute);
+app.use(movieDetailRoute);
 
