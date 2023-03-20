@@ -44,6 +44,15 @@
          <label for="">Price:</label> <input type="number" name="price" id="price" /><br><br>
         <button type="submit">Save</button>
     </form>
+    <script>
+        //prevent users from selecting dates in the future
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, '0');
+        var day = now.getDate().toString().padStart(2, '0');
+        var today = year + '-' + month + '-' + day;
+        $('#releaseDate').attr('max', today);
+    </script>
 </body>
 
 </html>
