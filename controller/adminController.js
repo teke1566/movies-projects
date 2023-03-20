@@ -36,7 +36,7 @@ router.post('/api/login', upload.single('profilepic'), (req, res, next) => {
     
 
     pool.query("select max(movie_id) as id from tbl_movies", (error, results) => {
-        if (error) throw error;
+        //if (error) throw error;
         // console.log(results)
 
         getNextUserId = results.rows[0].id + 1;
@@ -52,7 +52,7 @@ router.post('/api/login', upload.single('profilepic'), (req, res, next) => {
         if (results.rowCount < 0) {
 
             pool.query("INSERT INTO tbl_movies (movie_id,movie_name,pro_img) VALUES ($1,$2,$3)", [id, name, imgname], (error, results) => {
-                if (error) throw error;
+                //if (error) throw error;
                 console.log(results.rowCount)
                 res.status(200).json(results.rowCount);
             })
@@ -67,7 +67,7 @@ router.post('/api/login', upload.single('profilepic'), (req, res, next) => {
 
 router.get('/api/user', (req, res, next) => {
     pool.query("select username, password from tbl_users", (error, results) => {
-        if (error) throw error;
+        //if (error) throw error;
         res.status(200).json(results.rows);
     })
 
@@ -78,6 +78,24 @@ router.get('/add', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'addmovie.html'))
 })
 
+router.get('/admin', (req, res, next) => {
 
+    res.sendFile(path.join(__dirname, '../views', 'admin.html'))
+})
+
+
+router.get("/api/movies", (req, res, next) => {
+	pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id ", (error, results) => {
+		        //if (error) throw error;
+		res.send(results.rows);
+	});
+});
+router.get("/api/movies-list", (req, res, next) => {
+	
+		pool.query("select movie_id, movie_name,movie_desc, movie_cover,movie_link,movie_release_date,movie_view, cate_id,price_id from tbl_movies ", (error, results) => {
+        //if (error) throw error;
+		res.send(results.rows);
+	});
+});
 
 module.exports = router;

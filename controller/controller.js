@@ -36,7 +36,7 @@ router.post('/api/login', upload.single('profilepic'), (req, res, next) => {
     
 
     pool.query("select max(pro_id) as id from products", (error, results) => {
-        if (error) throw error;
+        //if (error) throw error;
         // console.log(results)
 
         getNextUserId = results.rows[0].id + 1;

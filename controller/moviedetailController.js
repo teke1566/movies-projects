@@ -8,7 +8,7 @@ const pool = require('../db');
 
 router.get('/api/movie/detail',(req,res,next)=>{
     pool.query("select * from tbl_movies", (error, results) => {
-        if (error) throw error;
+        //if (error) throw error;
        // res.status(200).json(results.rows);
         res.send(results);
     })
