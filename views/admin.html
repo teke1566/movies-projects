@@ -13,7 +13,6 @@
         $.ajax('/api/categories',{
             "type":"GET",
         }).done((res)=>{
-            console.log(res);
             for(let category of res){
                 $('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
             }

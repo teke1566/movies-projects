@@ -20,7 +20,6 @@
         $.ajax('/api/movies',{
             "type":"get",
         }).done((res)=>{
-            console.log(res);
            categories = getUniqueCategorieName(res);
            for(let category of categories){
                 let dataRow = $('<div class="dataRowMovie"></div>')
