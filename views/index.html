@@ -6,12 +6,72 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 </head>
 
-<style>
+<script>
+    let categories = [];
+    $(document).ready(()=>{
+        loadCategoryData()
+        loadMovieData();
+    });
+    function loadMovieData(){
+        $.ajax('/api/movies',{
+            "type":"get",
+        }).done((res)=>{
+            console.log(res);
+           categories = getUniqueCategorieName(res);
+           for(let category of categories){
+                let dataRow = $('<div class="dataRowMovie"></div>')
+                let p = $('<p class="movieCategory">'+ category[0].toUpperCase()+category.slice(1)+'</p>');
+                dataRow.append(p);
+                let container = $('<div class="grid-container" id="'+category+'"></div>');
+                dataRow.append(container);
+                $('.movie-list').append(dataRow);
+           }
+           for(let movie of res){
+                let container =$('#'+movie.cate_name);
+                let card = $('<div class="cards"></div>');
+                let img =    $('<img src="/Images/'+movie.movie_cover+'" />');
+                let time =  $('<div class="timeShow"> <span> Last episode'+ movie.movie_release_date+'</span></div>');
+                let name = $('<div><strong>'+movie.movie_name+'</strong></div>');
+                let btn =$('<div class="btnDownload"><span>MORE INFO</span></div>');
+                card.append(img);
+                card.append(time);
+                card.append(name);
+                card.append(btn);
+                container.append(card); 
+            }
+        })
+        .fail(()=>{
+            console.log("fail");
+        })
+    }
+    function loadCategoryData(){
+        $.ajax('/api/categories',{
+            "type":"get",
+        }).done((res)=>{
+            categories=res;
+            let u = $("<ul></ul>")
+            for(let category of res){
+                u.append('<li><a href="#">'+category.cate_name+'</a></li>')
+            }
+            u.append('<li><a href="#">'+"Contact Us"+'</a></li>')
+            $(".nav").append(u);
+        })
+        .fail(()=>{
+            console.log("fail");
+        })
+    }
+    
+    function getUniqueCategorieName(movies){
+        let names = movies.map(m=>m.cate_name);
+        categories = [...new Set(names)];
+        return categories;
+    }
 
-</style>
+</script>
 
 <body>
 
@@ -20,16 +80,7 @@
         <div class="myHeader">
             <div class="logo"><img src="img/logo12.png" width="155px"></div>
             <div class="nav">
-                <ul>
-                    <li><a href="#">Today</a></li>
-                    <li><a href="#">TV Series</a></li>
-                    <li><a href="#">Trailers</a></li>
-                    <li><a href="#">Series Calendar</a></li>
-                    <li><a href="#">DMCA</a></li>
-                    <li><a href="#">ADS Partnership </a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-
+                
             </div>
             <div class="boxSearch">
                 <img src="img/search.png" width="30px" />
@@ -95,101 +146,7 @@
             </div>
 
 
-            <div>
-                <div class="grid-container">
-                    <div class="cards">
-                        <img src="img/m1.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m2.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m3.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m4.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m5.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m6.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m7.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m8.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m9.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m10.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m11.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m12.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m13.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m14.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-                    <div class="cards">
-                        <img src="img/m15.jpg" />
-                        <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                        <div><strong>The Good Doctor</strong></div>
-                        <div class="btnDownload"><span>DOWNLOAD</span></div>
-                    </div>
-
-
-                </div>
+            <div class="movie-list">
             </div>
         </div>
 

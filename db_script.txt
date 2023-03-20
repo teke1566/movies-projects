@@ -1,0 +1,56 @@
+CREATE TABLE tbl_users (
+	user_id INT  ,
+	username VARCHAR ( 50 ) ,
+	password VARCHAR ( 50 ) ,
+	role_id INT 
+	
+);
+
+
+	  
+CREATE TABLE tbl_role (
+	role_id INT  ,
+	role_name VARCHAR ( 50 )
+	
+);
+
+
+CREATE TABLE tbl_categories (
+	cate_id INT  ,
+	cate_name VARCHAR ( 50 )
+	
+);
+
+
+CREATE TABLE tbl_movies (
+	movie_id INT  ,
+	movie_name VARCHAR ( 50 ),
+	movie_desc VARCHAR ( 50 ),
+	movie_cover VARCHAR ( 50 ),
+	movie_link VARCHAR ( 50 ),
+	movie_release_date VARCHAR ( 50 ),
+	movie_view INT,
+	cate_id INT,
+	price_id INT
+	
+);
+
+CREATE TABLE tbl_price (
+	price_id INT  ,
+	movie_price VARCHAR ( 50 )
+	
+	
+);
+
+	
+CREATE TABLE tbl_tickets (
+	tickets_id INT  ,
+	tickets_name VARCHAR ( 50 ),
+	showtimes VARCHAR ( 50 ),
+	discount VARCHAR ( 50 ),
+	price_id INT,
+	user_id INT,
+	movie_id INT,
+	cate_id INT,
+	remark VARCHAR ( 50 )
+);

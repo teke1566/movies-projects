@@ -1,0 +1,65 @@
+const express = require('express');
+const router = express.Router();
+const path = require('path')
+
+const pool = require('../db');
+
+const multer = require('multer');
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './public/Images');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname)
+    }
+
+});
+const upload = multer({ storage: storage });
+
+
+router.post('/admin', upload.single('profilepic'), (req, res, next) => {
+
+    let movie_name = req.body.name;
+    let movie_description = req.body.description;
+    let file = req.file;
+    let cover = file.filename;
+    let movie_link = req.body.link;
+    let movie_releaseDate = req.body.releaseDate;
+    let movie_views = req.body.views;
+    let movie_category = parseInt(req.body.category);
+    let movie_price = req.body.price;
+
+    let getNextUserId = 0;
+
+    let date = new Date();
+      
+    pool.query("select max(movie_id) as id from tbl_movies", (error, results) => {
+        if (error){
+            console.log(error);
+            res.send("An error happened");
+        }
+        console.log(results.rows)
+
+        getNextUserId = results.rows[0].id + 1;
+        console.log("getNextUserId : " + getNextUserId)
+        
+        if (results.rowCount > 0) {
+
+            pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, cover, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
+                if (error) {
+                    console.log(error);
+                    res.status(501).send("There was an error saving the movie");
+                }
+                res.status(200).json("Saved the movie successfully");
+            })
+        }
+    })
+})
+
+
+router.get('/admin', (req, res, next) => {
+
+    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+})
+
+module.exports = router;
