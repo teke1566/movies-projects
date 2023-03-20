@@ -4,7 +4,7 @@ const express = require("express");
 const app=express()
 const flash = require('express-flash');
 const session = require('express-session');
-const router=require("./routes/users")
+const router=require("./controller/subdir")
 const cookieParser=require("cookie-parser")
 app.use(session({
     secret: 'secret',
@@ -55,7 +55,7 @@ app.use(adminRoute);
 
 
 app.listen(2000,(req,res,next)=>{
-    console.log("server is running")
+    console.log("server is running 2000")
 })
 
 

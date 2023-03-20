@@ -6,7 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies</title>
-    <link rel="stylesheet" href="style.css" />
+    <style>
+        
+    </style>
+     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="/js/script.js" />
 </head>
 
 <style>
@@ -14,11 +19,13 @@
 </style>
 
 <body>
+    
+   
 
     <div class="container">
 
         <div class="myHeader">
-            <div class="logo"><img src="img/logo12.png" width="155px"></div>
+            <div class="logo"><img src="/img/logo12.png" width="155px"></div>
             <div class="nav">
                 <ul>
                     <li><a href="#">Romance</a></li>
@@ -33,18 +40,152 @@
             </div>
             <div class="boxSearch">
                 <label for="" class="conLogin">
-                    <a href="#">Login</a>
+                    <a href="#" id="loginBtn">Login</a>
+                  
+   
                 </label>
-                <label for=""><img src="img/search.png" width="30px" /></label>
+                <label for=""><img src="/img/search.png" width="30px" /></label>
 
             </div>
-
+             <!-- The login modal -->
+    <div id="myModal" class="modal">
+        <div>
+          <h3 style="color: crimson;">
+            <% if (typeof errors !== 'undefined') { %>
+               <% for (let i in errors) { %>
+                  <%= errors[i].message %>
+               <% } %> 
+            <% } %>
+          </h3>
         </div>
+    
+        <ul>
+          <% if(messages.success_msg) { %>
+          <li><%= messages.success_msg %></li>
+          <% } %>
+        </ul>
+    
+        <ul>
+          <% if (messages.error) { %>
+          <li><%= messages.error %></li>
+          <% } %>
+        </ul>
+      
+        <!-- Modal content box -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2>Login</h2>
+          
+    <div>
+        <ul>
+            <% if (typeof errors != 'undefined') { %> <% errors.forEach(error => { %>
+            <li><%= error.message %></li>
+            <% }) %> <% } %>
+          </ul>
+      
+          <ul>
+            <% if(messages.success_msg) { %>
+            <li><%= messages.success_msg %></li>
+            <% } %>
+          </ul>
+      
+          <ul>
+            <% if (messages.error) { %>
+            <li><%= messages.error %></li>
+            <% } %>
+          </ul>
+      
+        <form action="/users/login" method="POST">
+            <div>
+              <input  type="email"  id="email"    name="email"     placeholder="Email"     
+              />
+            </div>
+            <div>
+              <input    type="password"     id="password"     name="password"     placeholder="Password"     
+              />
+            </div>
+            <div>
+              <input type="submit" value="Login" />
+            </div>
+     
+        </br>
 
+          </form>
+    </div>
+        
+          <h2>Register</h2>
+          <div>
+         
+              <form action="/users/register" method="POST">
+                <div>
+                  <input type="text" id="firstname" name="firstname" placeholder="First Name" required />
+                  
+                </div>
+                <div>
+                  <input type="text" id="lastname" name="lastname" placeholder="Last Name"  />
+                </div>
+                <div>
+                  <input  type="email"  id="email"  name="email"  placeholder="Email"   
+                  />
+                </div>
+                <div>
+                  <input  type="password"  id="password"  name="password"  placeholder="Password"  />
+                </div>
+                <div>
+                  <input type="password" id="confirmpassword" name="confirmpassword"  placeholder="Confirm Password" />
+                </div>
+                <div>
+                  <input type="submit" value="Register" />
+                </div>
+               
+                <a href="#" id="loginBtn">Already registered? Login here</a>
+              </form>
+              <div id="error-message"></div>
+          </div>
+          
+        </div>
+    
+      </div>
+    
+      <!-- JavaScript to handle the login modal -->
+      <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+    
+        // Get the button that opens the modal
+        var btn = document.getElementById("loginBtn");
+        var btn1 = document.getElementById("rBtn");
+    
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+    
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+    
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+    
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+      </script>
+
+  
+        </div>
+       
+          
         <div class="myBody">
+            
             <div class="myContent">
                 <div class="boxLeft">
-                    <img src="img/1.jpg" width="100%" height="100%" />
+                    <img src="./img/1.jpg" width="100%" height="100%" />
                 </div>
 
                 <div class="boxCenter">
