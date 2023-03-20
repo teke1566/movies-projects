@@ -7,9 +7,11 @@ app.use(express.static("public"));
 const cookieParser = require("cookie-parser");
 
 //const homeRoute = require('./controller.js')
-var testRoute = require("./controller/controller");
 var homeRoute = require("./controller/homeController");
 var adminRoute = require("./controller/adminController");
+var movieDetailRoute = require("./controller/moviedetailController");
+const userRoute=require("./controller/userController")
+
 
 //Read the parameters from post request
 app.use(cookieParser());
@@ -22,3 +24,20 @@ app.listen(3000, (req, res, next) => {
 
 app.use(adminRoute);
 app.use(homeRoute);
+app.use(movieDetailRoute);
+app.use(userRoute);
+
+
+//from teketsel login part
+
+//app.set("view engine","html")
+//app.engine("html",ejs.renderFile)
+//app.set('views','./views')
+//app.use(express.static('public'))
+//app.use('/css',express.static(__dirname+'public/css'))
+//app.use('/js',express.static(__dirname+'public/js'))
+//app.use('/img',express.static(__dirname+'public/img'))
+// app.use("/users/register",userRoute)
+// app.use("/users/login",userRoute)
+// app.use("/users/dashboard",userRoute)
+// app.use("/users/logout",userRoute)

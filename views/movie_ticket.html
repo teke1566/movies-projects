@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+
+    
+
+
+
+    
+
+
+
+</script>
+
+<style>
+    .numCart {
+        color: red;
+        position: absolute;
+        right: 99px;
+        top: 15px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+
+        <div class="myHeader">
+            <div class="logo"><img src="/Images/logo12.png" width="155px"></div>
+            <div class="nav">
+                <ul>
+                    <li><a href="#">Romance</a></li>
+                    <li><a href="#">Comedy</a></li>
+                    <li><a href="#">Fantasy</a></li>
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Horror</a></li>
+                    <li><a href="#">Thriller </a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+
+            </div>
+            <div class="boxSearch">
+                <label for=""><img src="/Images/mvoie_cart.png" width="30px" /><span class="numCart">0</span></label>
+
+                <label for="" class="conLogin">
+                    <a href="#">Login</a>
+                </label>
+                <label for="" class="conLogin">
+                    <a href="#"><img src="/Images/search.png" width="25px" /></a>
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="" style="background-color: #2f363b; height: 900px;border: 5px solid white;">
+
+            <div style="padding-top: 100px;width: 100%; margin: 5px; color: white;">
+                <div style="width: 40%;float: left;">
+                    <h3>Cart </h3>
+
+                    <div style="width: 100%;  float: left;" id="dataTicket">
+
+                        <div style="border: 1px solid white;height: 350px;  margin: 13px;">
+                            <div style="padding: 20px;">
+
+                                <table style="text-align: left !important;">
+                                    <tr>
+                                        <th>MOVIE TITLE </th>
+                                        <td>: <span class="movie_name"></span> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>THEATER </th>
+                                        <td>: <span class="theater"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>SEAT NO. </th>
+                                        <td>: <span class="seatno"></span> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>DATE </th>
+                                        <td>: <span class="showdate"></span> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>SHOWTIME </th>
+                                        <td>: <span class="showtime"></span> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Price </th>
+                                        <td>: $ <span class="price"></span> </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Discount </th>
+                                        <td>: <span class="discount"></span>% </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Total Price </th>
+                                        <td>:$ <span class="total_price"></span> </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <span style="text-align: center;">
+                            <Button
+                                style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 47px;">
+                                Payment</Button></span>
+                    </div>
+
+
+
+                </div>
+                <div style="width: 60%;float: left;height: 500px;">
+                    <h3>History Records</h3>
+
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        <div class="footer">
+
+            <div class="flex-container">
+                <div class="flex-item-left">
+                    <h4>About Us</h4>
+                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                        Exercitationem voluptatum ipsa nobis laboriosam, illum vel quam. Blanditiis porro voluptatum
+                        corrupti, repellat tempora ullam temporibus ex aliquid officiis officia atque aliquam.</p>
+
+                    <h5>Tel: +123456789</h5>
+                    <h5>Email: phin.phearun2013@gmail.com</h5>
+
+                    <div>
+                        <span class="boxEmail"> Enter your Email</span>
+                        <span class="boxEmail" style="background-color: rgb(241 150 1);color: white;"> Send</span>
+                    </div>
+
+                </div>
+                <div class="flex-item-center">
+                    <h4>Developed By</h4>
+                    <ul>
+                        <li>Name: <strong> Phearun Phin</strong></li>
+                        <li>Email: <strong>phin.phearun2013@gmail.com</strong></li>
+
+                    </ul>
+
+                    <h4>Latest Tweet</h4>
+                    <ul>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                    </ul>
+
+
+                </div>
+                <div class="flex-item-right">
+                    <h4>Top Movies</h4>
+
+                    <div class="grid-movies">
+
+                        <div class="movies1"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies2"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies3"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies4"><img src="/Images/m3.jpg" /></div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <hr />
+            <div>
+                <div class="nav">
+                    <ul>
+                        <li><a href="#">Today</a></li>
+                        <li><a href="#">TV Series</a></li>
+                        <li><a href="#">Trailers</a></li>
+                        <li><a href="#">Series Calendar</a></li>
+                        <li><a href="#">DMCA</a></li>
+                        <li><a href="#">ADS Partnership </a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+
+                </div>
+                <div class="boxSearch">
+                    <img src="/Images/logo12.png" width="100px" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</body>
+
+</html>

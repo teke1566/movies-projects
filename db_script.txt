@@ -1,17 +1,19 @@
 CREATE TABLE tbl_users (
-	user_id INT  ,
-	username VARCHAR ( 50 ) ,
-	password VARCHAR ( 50 ) ,
-	role_id INT 
+	user_id BIGSERIAL PRIMARY KEY,
+	firstname VARCHAR(200) NOT NULL,
+	lastname VARCHAR(200) NOT NULL,
+	email VARCHAR(200) NOT NULL UNIQUE,
+	password VARCHAR(200) NOT NULL,
+	role_id INT REFERENCES tbl_role(role_id)
 	
 );
 
 
 	  
 CREATE TABLE tbl_role (
-	role_id INT  ,
-	role_name VARCHAR ( 50 )
-	
+	role_id INT PRIMARY KEY,
+	role_name VARCHAR ( 50 ),
+	UNIQUE (role_id)
 );
 
 
@@ -25,21 +27,21 @@ CREATE TABLE tbl_categories (
 CREATE TABLE tbl_movies (
 	movie_id INT  ,
 	movie_name VARCHAR ( 50 ),
-	movie_desc VARCHAR ( 50 ),
+	movie_desc VARCHAR ( 550 ),
 	movie_cover VARCHAR ( 50 ),
 	movie_link VARCHAR ( 50 ),
 	movie_release_date VARCHAR ( 50 ),
 	movie_view INT,
 	cate_id INT,
-	price_id INT
+	price_id INT,
+	theater INT
 	
 );
 
 CREATE TABLE tbl_price (
 	price_id INT  ,
-	movie_price VARCHAR ( 50 )
-	
-	
+	movie_price VARCHAR ( 50 ),
+	movie_id INT	
 );
 
 	

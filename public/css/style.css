@@ -214,3 +214,10 @@
 .grid-container img{
 	width: 250px;
 }
+
+#content-img{
+	object-fit: cover;
+}
+.flex-item-center ul li{
+	list-style: none;
+}

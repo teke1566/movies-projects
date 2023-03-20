@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- fake, main one from maseret-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a movie</title>
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    function fetchCategories(){
+        $.ajax('/api/categories',{
+            "type":"GET",
+        }).done((res)=>{
+            for(let category of res){
+                $('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
+            }
+        })
+    }
+    fetchCategories();
+</script>
+<body>
+    <h3>Save a movie</h3>
+    <form id="myForm" action="/admin" method="post" enctype="multipart/form-data">
+        <label for="">Name: </label><input type="text" name="name" id="name" /><br><br>
+        <label for="">Description: </label><textarea name="description" id="description" cols="30" rows="2"></textarea><br><br>
+        <label for="">Movie Cover:</label> <input type="file" name="profilepic" id="profilepic" accept="image/*"><br><br>
+        <label for="">Movie Link:</label> <input type="text" name="link" id="link" /><br><br>
+        <label for="">Release date:</label> <input type="date" name="releaseDate" id="releaseDate" /><br><br>
+        <label for="">Movie views count:</label> <input type="number" name="views" id="views" /><br><br>
+        <label for="">Movie theater:</label> <select name="theater" id="theater">
+            <option value="1">theater 1</option>
+            <option value="2">theater 2</option>
+            <option value="3">theater 3</option>
+            <option value="4">theater 4</option>
+            <option value="5">theater 5</option>
+            <option value="6">theater 6</option>
+        </select><br><br>
+        <label for="">Movie Category: </label> <select name="category" id="category">
+            
+        </select><br><br>
+
+         <label for="">Price:</label> <label for="">Movie theater:</label> <select name="theater" id="theater">
+            <option value="1">theater 1</option>
+            <option value="2">theater 2</option>
+            <option value="3">theater 3</option>
+            <option value="4">theater 4</option>
+            <option value="5">theater 5</option>
+            <option value="6">theater 6</option>
+        </select><br><br>
+        <button type="submit">Save</button>
+    </form>
+    <script>
+        //prevent users from selecting dates in the future
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, '0');
+        var day = now.getDate().toString().padStart(2, '0');
+        var today = year + '-' + month + '-' + day;
+        $('#releaseDate').attr('max', today);
+    </script>
+</body>
+
+</html>

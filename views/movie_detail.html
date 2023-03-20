@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        var currentDate = new Date()
+
+
+        var html = "";
+        var k = 1;
+        for (let i = 0; i < 3; i++) {
+            var day = currentDate.getDate() + i
+            var month = currentDate.getMonth()
+            var year = currentDate.getFullYear()
+            var myDate = day + "-" + month + "-" + year;
+            // 
+            html += '<Button type="button" onclick="selectDate(this)" data-t1="btn' + k + '" class="d' + k + ' btnDate btnDis"><span>' + myDate + '</span></Button> &nbsp'
+            k++;
+        }
+        $("#conBtnDate").append(html);
+
+        getDataMovie()
+
+    });
+
+
+
+    function getDataMovie() {
+
+        var urlUpdate = window.location.pathname;
+        var movie_id = urlUpdate.replace("/movie/", "");
+
+        $.ajax('/api/movie/' + movie_id, {
+            "type": "get"
+
+        }).done(function (data) {
+
+            console.log(data.rows[0])
+            var movie_cover = data.rows[0].movie_cover;
+            var movie_desc = data.rows[0].movie_desc;
+            var movie_link = data.rows[0].movie_link;
+            var movie_name = data.rows[0].movie_name;
+            var movie_release_date = data.rows[0].movie_release_date;
+            var movie_view = data.rows[0].movie_view;
+            var price_id = data.rows[0].price_id;
+            var theater = data.rows[0].theater;
+            var cate_name = data.rows[0].cate_name;
+
+            $(".theater").text(theater);
+            $(".movie_release_date").text(movie_release_date);
+            $(".movie_name").text(movie_name);
+            $(".cate_name").text(cate_name);
+            $(".movie_view").text(movie_view);
+            $(".movie_desc").text(movie_desc);
+
+
+
+
+
+
+        }).fail(function () {
+            console.log("fail");
+        })
+    }
+
+    var getTime = "";
+    function selectTime(btn) {
+
+        $(btn).addClass("btnTimeAct");
+        $(btn).removeClass("btnTime");
+
+        var thisBtn = $(btn).attr("data-t1");
+        getTime = $(btn).text();
+        console.log(getTime);
+
+        if (thisBtn == "btn1") {
+            $(".btn2 , .btn3 , .btn4 , .btn5 , .btn6").addClass("btnTime");
+        } else if (thisBtn == "btn2") {
+            $(".btn1 , .btn3 , .btn4 , .btn5 , .btn6").addClass("btnTime");
+        } else if (thisBtn == "btn3") {
+            $(".btn1 , .btn2 , .btn4 , .btn5 , .btn6").addClass("btnTime");
+        } else if (thisBtn == "btn4") {
+            $(".btn1 , .btn3 , .btn2 , .btn5 , .btn6").addClass("btnTime");
+        } else if (thisBtn == "btn5") {
+            $(".btn1 , .btn3 , .btn4 , .btn2 , .btn6").addClass("btnTime");
+        } else if (thisBtn == "btn6") {
+            $(".btn1 , .btn3 , .btn4 , .btn5 , .btn2").addClass("btnTime");
+        }
+
+    }
+    var getDate = "";
+    function selectDate(btn) {
+
+        $(btn).addClass("btnDateAct");
+        $(btn).removeClass("btnDate");
+
+        var thisBtn = $(btn).attr("data-t1");
+        getDate = $(btn).text();
+        console.log(getDate);
+
+        if (thisBtn == "btn1") {
+            $(".d2 , .d3").addClass("btnDate");
+        } else if (thisBtn == "btn2") {
+            $(".d1 , .d3").addClass("btnDate");
+        } else if (thisBtn == "btn3") {
+            $(".d1 , .d2").addClass("btnDate");
+        }
+
+    }
+
+    //var objTicket = {}
+
+    function saveTiciket() {
+        let seatArr = [];
+        let qty = 0;
+        $('input[name="seat"]:checked').each(function () {
+            seatArr.push(this.value + " ");
+            qty++;
+        });
+
+        if (qty != 0 && getTime != "" && getDate != "") {
+
+            var price =10;
+            var discount =5;
+
+            $("#dataTicket").css('display', '');
+            $(".seatno").text(seatArr)
+            $(".showtime").text(getTime);
+            $(".showdate").text(getDate);
+
+            $('.btnSaveTicket, input[name="seat"], .btnDis, .btnDis').attr('disabled', 'disabled');
+            $('.btnAddMore').css('display', '');
+
+            $(".price").text(price);
+            $(".discount").text(discount);
+            var totalPrice = (price*qty) - (price*qty)*(discount/100);
+            $(".total_price").text(totalPrice);
+
+            var addCart = 0;
+
+            $('.numCart').text(parseInt(addCart) + 1);
+
+            $.ajax('/cookie/cart', {
+                "type": "POST",
+                "data": {
+                    'movie_id': 1,
+                    'movie_name': $(".movie_name").text(),
+                    'theater': $(".theater").text(),
+                    'seatno': seatArr,
+                    'getDate': getDate,
+                    'getTime': getTime,
+                    'price': price,
+                    'discount': discount,
+                    'total_price': totalPrice,
+                }
+            }).done(function (data) {
+                console.log(data)
+
+            }).fail(function () {
+                console.log("fail");
+            })
+
+
+
+
+        } else {
+            alert("Please Select your information!!!")
+        }
+    }
+    function addTiciket() {
+        $('.btnSaveTicket, input[name="seat"], .btnDis, .btnDis').attr("disabled", false)
+        $('.btnAddMore').css('display', 'none');
+
+    }
+
+
+
+
+</script>
+
+<style>
+    #seatNumber {
+        font-size: 20px;
+
+    }
+
+    #seatNumber th,
+    #seatNumber td {
+        width: 50px;
+        text-align: center;
+    }
+
+    #dataTicket th {
+        width: 130px;
+        height: 30px;
+    }
+
+    .btnTicket {
+        padding: 5px;
+        background-color: pink;
+        border-radius: 7px;
+        width: 150px;
+        font-size: 15px;
+        height: 47px;
+        border: 0px;
+        cursor: pointer;
+    }
+
+    .btnTimeAct {
+        padding: 5px;
+        background-color: #3f6fb6;
+        border-radius: 7px;
+        width: 80px;
+        font-size: 15px;
+        height: 40px;
+        border: 0px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btnTime {
+        padding: 5px;
+        background-color: white;
+        border-radius: 7px;
+        width: 80px;
+        font-size: 15px;
+        height: 40px;
+        border: 0px;
+        cursor: pointer;
+        color: black;
+    }
+
+    .btnDateAct {
+        padding: 5px;
+        background-color: #3f6fb6;
+        border-radius: 7px;
+        width: 100px;
+        font-size: 15px;
+        height: 40px;
+        border: 0px;
+        cursor: pointer;
+        color: white;
+    }
+
+    .btnDate {
+        padding: 5px;
+        background-color: white;
+        border-radius: 7px;
+        width: 100px;
+        font-size: 15px;
+        height: 40px;
+        border: 0px;
+        cursor: pointer;
+        color: black;
+    }
+
+    .numCart {
+        color: red;
+        position: absolute;
+        right: 99px;
+        top: 15px;
+        font-weight: bold;
+    }
+</style>
+
+<body>
+
+    <div class="container">
+
+        <div class="myHeader">
+            <div class="logo"><img src="/Images/logo12.png" width="155px"></div>
+            <div class="nav">
+                <ul>
+                    <li><a href="#">Romance</a></li>
+                    <li><a href="#">Comedy</a></li>
+                    <li><a href="#">Fantasy</a></li>
+                    <li><a href="#">Action</a></li>
+                    <li><a href="#">Horror</a></li>
+                    <li><a href="#">Thriller </a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+
+            </div>
+            <div class="boxSearch">
+                <label for=""><a href="/movie/ticket/"><img src="/img/mvoie_cart.png" width="30px" /><span class="numCart">0</span></a></label>
+
+                <label for="" class="conLogin">
+                    <a href="#">Login</a>
+                </label>
+                <label for="" class="conLogin">
+                    <a href="#"><img src="/Images/search.png" width="25px" /></a>
+                </label>
+
+            </div>
+
+        </div>
+
+        <div class="" style="background-color: #2f363b; height: 900px;border: 5px solid white;">
+
+            <div style="padding-top: 100px;width: 100%; margin: 5px; color: white;">
+                <div style="width: 50%;float: left;">
+                    <div style="width: 100%;height: 300px;">
+                        <div style="width: 30%; ;  float: left;">
+                            <img src="/Images/m3.jpg" width="200px"
+                                style="border-radius: 15%; border: 2px solid white; margin-left: 10px;">
+
+                        </div>
+
+                        <div style="width: 70%; float: left;">
+                            <span style="text-align: left;">
+                                <h3>THEATER : <span class="theater"></span></h3>
+                                <h3>RELEASE : <span class="movie_release_date"></span></h3>
+                                <h3>TITLTE : <span class="movie_name"></span> </h3>
+                                <h3><label for=""><span class="cate_name"></span> </label>&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for=""> VIEW: <span class="movie_view"></label>
+                                </h3>
+                                <h3><label for="">PRICE : $ <span class="price"></span> </label>&nbsp;
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label for=""> DISCOUNT: <span class="discount"></span>%</label>
+                                </h3>
+                            </span>
+
+                            <label for="">
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn1"
+                                    class="btnDis btn1 btnTime">13:30</Button>
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn2"
+                                    class="btnDis btn2 btnTime">14:30</Button>
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn3"
+                                    class="btnDis btn3 btnTime">15:30</Button>
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn4"
+                                    class="btnDis btn4 btnTime">16:30</Button>
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn5"
+                                    class="btnDis btn5 btnTime">17:30</Button>
+                                <Button type="button" onclick="selectTime(this)" data-t1="btn6"
+                                    class="btnDis btn6 btnTime">18:30</Button>
+                            </label>
+
+                        </div>
+                    </div>
+
+
+
+                    <div style="width: 100%;height: 300px;">
+
+
+
+                        <div style="width: 50%;;  float: left;">
+                            <label for="" id="conBtnDate">
+
+                            </label>
+                            <h1>SCREEN</h1>
+                            <table id="seatNumber">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>1</th>
+                                        <th>2</th>
+                                        <th>3</th>
+                                        <th>4</th>
+                                        <th>5</th>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>A</td>
+                                        <td><input type="checkbox" name="seat" value="A1" /></td>
+                                        <td><input type="checkbox" name="seat" value="A2" /></td>
+                                        <td><input type="checkbox" name="seat" value="A3" /></td>
+                                        <td><input type="checkbox" name="seat" value="A4" /></td>
+                                        <td><input type="checkbox" name="seat" value="A5" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>B</td>
+                                        <td><input type="checkbox" name="seat" value="B1" /></td>
+                                        <td><input type="checkbox" name="seat" value="B2" /></td>
+                                        <td><input type="checkbox" name="seat" value="B3" /></td>
+                                        <td><input type="checkbox" name="seat" value="B4" /></td>
+                                        <td><input type="checkbox" name="seat" value="B5" /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>C</td>
+                                        <td><input type="checkbox" name="seat" value="C1" /></td>
+                                        <td><input type="checkbox" name="seat" value="C2" /></td>
+                                        <td><input type="checkbox" name="seat" value="C3" /></td>
+                                        <td><input type="checkbox" name="seat" value="C4" /></td>
+                                        <td><input type="checkbox" name="seat" value="C5" /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>E</td>
+                                        <td><input type="checkbox" name="seat" value="D1" /></td>
+                                        <td><input type="checkbox" name="seat" value="D2" /></td>
+                                        <td><input type="checkbox" name="seat" value="D3" /></td>
+                                        <td><input type="checkbox" name="seat" value="D4" /></td>
+                                        <td><input type="checkbox" name="seat" value="D5" /></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>F</td>
+                                        <td><input type="checkbox" name="seat" value="F1" /></td>
+                                        <td><input type="checkbox" name="seat" value="F2" /></td>
+                                        <td><input type="checkbox" name="seat" value="F3" /></td>
+                                        <td><input type="checkbox" name="seat" value="F4" /></td>
+                                        <td><input type="checkbox" name="seat" value="F5" /></td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <Button type="button" onclick="saveTiciket()" class="btnTicket btnSaveTicket">
+                                Save Tickets
+                            </Button>
+                            <Button type="button" onclick="addTiciket()" style="display: none;" id="saveTicket"
+                                class="btnTicket btnAddMore">
+                                AddMore Tickets
+                            </Button>
+
+
+                        </div>
+
+                        <div style="width: 50%;  float: left; display: none;" id="dataTicket">
+
+
+                            <div style="border: 1px solid white;height: 350px;  margin: 13px;">
+                                <div style="padding: 20px;">
+
+                                    <table style="text-align: left !important;">
+                                        <tr>
+                                            <th>MOVIE TITLE </th>
+                                            <td>: <span class="movie_name"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>THEATER </th>
+                                            <td>: <span class="theater"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th>SEAT NO. </th>
+                                            <td>: <span class="seatno"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>DATE </th>
+                                            <td>: <span class="showdate"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>SHOWTIME </th>
+                                            <td>: <span class="showtime"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Price </th>
+                                            <td>: $ <span class="price"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Discount </th>
+                                            <td>: <span class="discount"></span>% </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Total Price </th>
+                                            <td>:$ <span class="total_price"></span> </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <span style="text-align: center;">
+                                <Button
+                                    style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 47px;">
+                                    Payment</Button></span>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div style="width: 50%;float: left;height: 500px;">
+                    <iframe width="100%" height="385" src="https://www.youtube.com/embed/nqye02H_H6I" frameborder="0"
+                        allowfullscreen></iframe>
+
+                    <h3>Description:
+                        <p class="movie_desc">
+
+                        </p>
+                    </h3>
+
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+        <div class="footer">
+
+            <div class="flex-container">
+                <div class="flex-item-left">
+                    <h4>About Us</h4>
+                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                        Exercitationem voluptatum ipsa nobis laboriosam, illum vel quam. Blanditiis porro voluptatum
+                        corrupti, repellat tempora ullam temporibus ex aliquid officiis officia atque aliquam.</p>
+
+                    <h5>Tel: +123456789</h5>
+                    <h5>Email: phin.phearun2013@gmail.com</h5>
+
+                    <div>
+                        <span class="boxEmail"> Enter your Email</span>
+                        <span class="boxEmail" style="background-color: rgb(241 150 1);color: white;"> Send</span>
+                    </div>
+
+                </div>
+                <div class="flex-item-center">
+                    <h4>Developed By</h4>
+                    <ul>
+                        <li>Name: <strong> Phearun Phin</strong></li>
+                        <li>Email: <strong>phin.phearun2013@gmail.com</strong></li>
+
+                    </ul>
+
+                    <h4>Latest Tweet</h4>
+                    <ul>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
+                            nobis laboriosam, illum vel quam.</li>
+                    </ul>
+
+
+                </div>
+                <div class="flex-item-right">
+                    <h4>Top Movies</h4>
+
+                    <div class="grid-movies">
+
+                        <div class="movies1"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies2"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies3"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies4"><img src="/Images/m3.jpg" /></div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <hr />
+            <div>
+                <div class="nav">
+                    <ul>
+                        <li><a href="#">Today</a></li>
+                        <li><a href="#">TV Series</a></li>
+                        <li><a href="#">Trailers</a></li>
+                        <li><a href="#">Series Calendar</a></li>
+                        <li><a href="#">DMCA</a></li>
+                        <li><a href="#">ADS Partnership </a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+
+                </div>
+                <div class="boxSearch">
+                    <img src="/Images/logo12.png" width="100px" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</body>
+
+</html>

@@ -22,7 +22,6 @@ router.post('/admin', upload.single('profilepic'), (req, res, next) => {
     let movie_name = req.body.name;
     let movie_description = req.body.description;
     let file = req.file;
-    let cover = file.filename;
     let movie_link = req.body.link;
     let movie_releaseDate = req.body.releaseDate;
     let movie_views = req.body.views;
@@ -34,31 +33,43 @@ router.post('/admin', upload.single('profilepic'), (req, res, next) => {
     let date = new Date();
       
     pool.query("select max(movie_id) as id from tbl_movies", (error, results) => {
-        if (error){
-            console.log(error);
-            res.send("An error happened");
-        }
+        if (error) throw error;
         console.log(results.rows)
 
         getNextUserId = results.rows[0].id + 1;
         console.log("getNextUserId : " + getNextUserId)
-        
+        /*
+            movie_id INT  ,
+            movie_name VARCHAR ( 50 ),
+            movie_desc VARCHAR ( 50 ),
+            movie_cover VARCHAR ( 50 ),
+            movie_link VARCHAR ( 50 ),
+            movie_release_date VARCHAR ( 50 ),
+            movie_view INT,
+            cate_id INT,
+            price_id INT
+        */
+
         if (results.rowCount > 0) {
 
-            pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, cover, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
-                if (error) {
-                    console.log(error);
-                    res.status(501).send("There was an error saving the movie");
-                }
-                res.status(200).json("Saved the movie successfully");
+            pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, file, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
+                if (error) throw error;
+                console.log(results.rowCount)
+                res.status(200).json(results.rowCount);
             })
         }
     })
+
+    res.send("An error occured");
+
 })
 
 
 router.get('/admin', (req, res, next) => {
-
+    // pool.query("select username, password from users", (error, results) => {
+    //     if (error) throw error;
+    //     res.status(200).json(results.rows);
+    // })
     res.sendFile(path.join(__dirname, '../views', 'admin.html'));
 })
 
