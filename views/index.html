@@ -8,11 +8,36 @@
     <title>Movies</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
 </head>
 
 <script>
     let categories = [];
     $(document).ready(()=>{
+        var getMyTicket = $.cookie("cookieTicket");
+        var getFirstNm = $.cookie("firstNm");
+        var getLastNm = $.cookie("lastNm");
+        var getRoleId = $.cookie("role_id");
+        if(getMyTicket == "" || getMyTicket == undefined){
+            $(".numCart").text("0");
+        }else{
+            $(".numCart").text("1");
+        }
+
+        var htmlLogin = "";
+        // $("#checkLogIn").remove();
+        if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            $("#checkLogIn").append(htmlLogin);
+
+        } else {
+
+            htmlLogin = '<a href="/login" style="color: white;">Login</a>';
+            $("#checkLogIn").append(htmlLogin);
+        }
+
+
         loadCategoryData()
         loadMovieData();
     });
@@ -72,17 +97,33 @@
 
 </script>
 
+<style>
+     .numCart {
+        color: red;
+        position: absolute;
+        right: 25px;
+        top: 15px;
+        font-weight: bold;
+    }
+</style>
+
 <body>
 
     <div class="container">
 
         <div class="myHeader">
-            <div class="logo"><img src="img/logo12.png" width="155px"></div>
+            <div class="logo"><img src="/img/logo12.png" width="155px"></div>
             <div class="nav">
-                
+
             </div>
-            <div class="boxSearch">
-                <img src="img/search.png" width="30px" />
+            <div class="boxSearch" style="color: white;">
+                <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                            class="numCart">0</span></a></label>
+
+
+
             </div>
 
         </div>

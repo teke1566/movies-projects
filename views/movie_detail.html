@@ -15,9 +15,15 @@
     var payment = false;
     $(document).ready(function () {
 
+        var getMyTicket = $.cookie("cookieTicket");
         var getFirstNm = $.cookie("firstNm");
         var getLastNm = $.cookie("lastNm");
         var getRoleId = $.cookie("role_id");
+        if (getMyTicket == "" || getMyTicket == undefined) {
+            $(".numCart").text("0");
+        } else {
+            $(".numCart").text("1");
+        }
 
         var htmlLogin = "";
         // $("#checkLogIn").remove();
@@ -76,6 +82,7 @@
                         var seatno = ticketInfor.seatno;
                         var totalprice = ticketInfor.total_price
 
+                        
                         console.log(user_id);
 
                         $.ajax('/api/ticket/add', {
@@ -93,12 +100,20 @@
                         }).done(function (data) {
                             console.log(data)
 
+                            if(data == "success"){
+                                
+                                window.location.href = "http://localhost:3000/history/ticket/";
+                            }
+
                             hideTicketInfor();
                             $(".numCart").text("0");
 
                         }).fail(function () {
                             console.log("fail");
                         })
+                    }else{
+                        alert("Please Enter Bank Account")
+                        return false;
                     }
                 }
             } else {
@@ -154,6 +169,8 @@
             $(".price").text(price);
             $(".discount").text(discount);
 
+            $(".priceHid").val(price);
+            $(".movie_idHid").val(data.rows[0].movie_id);
 
         }).fail(function () {
             console.log("fail");
@@ -217,7 +234,10 @@
 
         if (qty != 0 && getTime != "" && getDate != "") {
 
-            var price = 10;
+           
+            
+
+            var price =  $(".priceHid").val();
             var discount = 5;
 
             $("#dataTicket").css('display', '');
@@ -249,8 +269,8 @@
             $.ajax('/cookie/cart', {
                 "type": "POST",
                 "data": {
-                    'movie_id': 1,
-                    'movie_name': $(".movie_name").text(),
+                    'movie_id': $(".movie_idHid").val(),
+                    'movie_name': $(".movie_name1").text(),
                     'theater': $(".theater1").text(),
                     'seatno': JSON.stringify(seatArr),
                     'getDate': getDate,
@@ -392,12 +412,12 @@
     <div class="container">
 
         <div class="myHeader">
-            <div class="logo"><img src="/img/logo12.png" width="155px"></div>
+            <div class="logo"><a href="/"><img src="/img/logo12.png" width="155px"></a></div>
             <div class="nav">
 
             </div>
             <div class="boxSearch" style="color: white;">
-                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
                             class="numCart">0</span></a></label>
@@ -422,11 +442,13 @@
                             <span style="text-align: left;">
                                 <h3>THEATER : <span class="theater theater1"></span></h3>
                                 <h3>RELEASE : <span class="movie_release_date"></span></h3>
-                                <h3>TITLTE : <span class="movie_name"></span> </h3>
+                                <h3>TITLTE : <span class="movie_name movie_name1"></span> </h3>
                                 <h3><label for="">Type : <span class="cate_name"></span> </label>&nbsp;
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label for=""> VIEW: <span class="movie_view"></label>
                                 </h3>
+                                <input type="hidden" class="priceHid">
+                                <input type="hidden" class="movie_idHid">
                                 <h3><label for="">PRICE : $ <span class="price"></span> </label>&nbsp;
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label for=""> DISCOUNT: <span class="discount"></span>%</label>
