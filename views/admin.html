@@ -92,7 +92,6 @@ function handleDelete(elem){
     const deleteButton = $(this).find('#deleteBtn');
     if (deleteButton) {
         // If a "delete" button is found, attach an event listener to it
-        console.log("found delete button");
         deleteButton.on('click', function() {
         // Confirm the delete operation
             $.ajax('/movies/'+id,{
@@ -126,8 +125,7 @@ function loadMovieData(){
                 row.append(d);
                 
             }
-           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
-           //let actions = $('<td><button type="button" onclick="handleEdit1(this)">ok </button><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onlick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
+           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
           
            row.append(actions);
             $('#main').append(row);
