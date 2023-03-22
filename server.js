@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.listen(3000, (req, res, next) => {
+app.listen(4000, (req, res, next) => {
 	console.log("server is running on port 3000");
 });
 

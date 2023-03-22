@@ -125,8 +125,29 @@ router.post('/api/register', async (req, res, next) => {
 
 router.get('/register', (req, res, next) => {
 
+    if(!req.cookies.userID){
+     res.redirect('/login')
+     return
+    }
+    
     res.sendFile(path.join(__dirname, "../views", 'register.html'))
 })
-
-
+router.get('/admin', (req, res, next) => {
+    if(!req.cookies.userID){
+        res.redirect('/login')
+        return
+       }
+    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+})
+router.use((req, res, next) => {
+    const err = new Error('404 NOT FOUND PAGE');
+    err.status = 404;
+    next(err);
+  });
+  
+  router.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).send(err.message);
+  });
+  
 module.exports = router;
