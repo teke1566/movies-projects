@@ -14,7 +14,7 @@ router.get("/api/movies", (req, res, next) => {
 
 router.get("/api/movies-list", (req, res, next) => {
 	
-	pool.query("select movie_id, movie_name,movie_desc, movie_cover,movie_link,movie_release_date,movie_view, cate_id,price_id from tbl_movies ", (error, results) => {
+	pool.query("select movie_id, movie_name,movie_desc, movie_cover,movie_link,movie_release_date,movie_view, cate_id,price_id from tbl_movies ORDER BY movie_id", (error, results) => {
 		//if (error) throw error;
 		res.send(results.rows);
 	});
