@@ -33,9 +33,19 @@ $(document).ready(function(){
             });
         } 
     });
+
+    function fetchCategories(){
+        $.ajax('/api/categories',{
+            "type":"GET",
+        }).done((res)=>{
+            for(let category of res){
+                $('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
+            }
+        })
+    }
+    fetchCategories();
     
     loadMovieData();
-
     
 });
 function handleEdit(elem){
@@ -45,11 +55,14 @@ function handleEdit(elem){
 
 }
 
-// function handleEdittest(e){
-//     console.log("jd")
-//     var id = $(e).find("td:first").text();
-//     console.log(id);
-// }
+function handleEdit(elem){
+    console.log("hello")
+    var movie_id = $(elem).attr("data-movie_id");
+    console.log(movie_id)
+ 
+}
+
+
 
 function loadMovieData(){
     $.ajax('/api/movies-list',{
@@ -73,9 +86,9 @@ function loadMovieData(){
           
            row.append(actions);
             $('#main').append(row);
-
+            
         }
-
+        
     }).fail(()=>{
         console.log("Failed");
     })
@@ -155,40 +168,56 @@ function loadMovieData(){
     <div id="addMovieModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form method="post" action="/admin" enctype="multipart/form-data">
                     <div class="modal-header">						
-                        <h4 class="modal-title">Add Movies </h4>
+                        <h4 class="modal-title">Add Movie </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">					
                         <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" required>
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name" id="name" required>
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea class="form-control" required></textarea>
+                            <textarea class="form-control" name="description" id="description" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Director</label>
-                            <input type="text" class="form-control" required>
+                            <label>Cover</label>
+                            <input type="file" class="form-control" name="profilepic" id="profilepic" accept="image/*" required>
                         </div>
                         <div class="form-group">
-                            <label>Release Date</label>
-                            <input type="date" class="form-control" required>
+                            <label>Link</label>
+                            <input type="text" name="link" id="link" class="form-control" required>
                         </div>	
                         <div class="form-group">
-                            <label>Genre</label>
-                            <input type="text" class="form-control" required>
+                            <label>Release Date</label>
+                            <input type="date" name="releaseDate" id="releaseDate" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Rating </label>
-                            <input type="number" class="form-control" required>
+                            <label>Views </label>
+                            <input type="number" name="views" id="views"class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Profile </label>
-                            <input type="text" class="form-control" required>
-                        </div>				
+                            <label>Theator </label>
+                            <select name="theater" id="theater" class="form-control">
+                                <option value="1">theater 1</option>
+                                <option value="2">theater 2</option>
+                                <option value="3">theater 3</option>
+                                <option value="4">theater 4</option>
+                                <option value="5">theater 5</option>
+                                <option value="6">theater 6</option>
+                            </select>
+                        </div>	
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" id="category" class="form-control form-control-select" required></select>
+                        </div>	
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input name="price" id="price" class="form-control" /> 
+                        </div>	
+                        			
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -243,6 +272,7 @@ function loadMovieData(){
                         <input type="submit" class="btn btn-info" value="Save">
                     </div>
                 </form>
+                
             </div>
         </div>
     </div>
@@ -268,5 +298,14 @@ function loadMovieData(){
             </div>
         </div>
     </div>
+    <script>
+        //prevent users from selecting dates in the future
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = (now.getMonth() + 1).toString().padStart(2, '0');
+        var day = now.getDate().toString().padStart(2, '0');
+        var today = year + '-' + month + '-' + day;
+        $('#releaseDate').attr('max', today);
+    </script>
 </body>
 </html>      

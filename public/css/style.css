@@ -213,6 +213,8 @@
 }
 .grid-container img{
 	width: 250px;
+	height: 350px;
+	object-fit: contain;
 }
 
 #content-img{

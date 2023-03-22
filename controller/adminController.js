@@ -34,8 +34,8 @@ router.post('/admin', upload.single('profilepic'), (req, res, next) => {
       
     pool.query("select max(movie_id) as id from tbl_movies", (error, results) => {
         if (error) throw error;
-        console.log(results.rows)
-
+        //console.log(results.rows)
+        console.log(file);
         getNextUserId = results.rows[0].id + 1;
         console.log("getNextUserId : " + getNextUserId)
         /*
@@ -52,16 +52,17 @@ router.post('/admin', upload.single('profilepic'), (req, res, next) => {
 
         if (results.rowCount > 0) {
 
-            pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, file, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
-                if (error) throw error;
-                console.log(results.rowCount)
-                res.status(200).json(results.rowCount);
+            pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, file.filename, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
+                if (error) {
+                    res.send(error.message);
+                }
+                else{
+
+                    res.status(200).json(results.rowCount);
+                }
             })
         }
     })
-
-    res.send("An error occured");
-
 })
 
 
