@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies | Register </title>
+
+</head>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+
+    var chekDup = false;
+    $(document).ready(function () {
+
+
+
+        $("#btnCheckDup").click(function () {
+
+            var email = $("#email").val().trim()
+
+            if (email == "") {
+                alert("Please Enter Your Email!")
+                $("#email").focus()
+                return false;
+            }
+
+            $.ajax('/api/checkEmail', {
+                "type": "POST",
+                "data": {
+                    'email': email
+                }
+            }).done(function (data) {
+                console.log(data)
+                if(data == "cannot"){
+                    alert("Email is already registered");
+                    return false;
+                }else if(data== "can"){
+                    chekDup = true;
+                    $("#email, #btnCheckDup").attr("disabled", true);
+                    
+                }
+
+
+            }).fail(function (err) {
+
+                console.log(err);
+                console.log("fail");
+            })
+        });
+
+
+    });
+
+    function btnSubmitUser() {
+
+        var firstName = $("#firstName").val().trim();
+        var lastName = $("#lastName").val().trim();
+        var email = $("#email").val().trim();
+        var password = $("#password").val().trim();
+        var confirmPwd = $("#conpassword").val().trim();
+
+
+        if (firstName == "" || lastName == "" || email == "" || password == "" || confirmPwd == "") {
+            alert("Please enter your information to register");
+            return false;
+        }
+
+        if (password != confirmPwd) {
+            alert("Password and Confirm password are not match");
+            return false;
+        }
+
+        if (chekDup) {
+
+            $.ajax('/api/register', {
+                "type": "POST",
+                "data": {
+                    'firstName': firstName,
+                    'lastName': lastName,
+                    'email': email,
+                    'password': password
+                }
+            }).done(function (data) {
+                console.log(data)
+
+                if (data == "success") {
+                    console.log("go to page")
+                    window.location.href = "http://localhost:3000/login";
+                }
+
+            }).fail(function () {
+                console.log("fail");
+            })
+        } else {
+            alert("Please check duplicate first before register.")
+        }
+
+
+
+
+    }
+
+</script>
+
+
+
+<style>
+    body {
+        background-image: url("/img/bgLogin.jpg");
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-size: 100% 950px;
+    }
+
+    .container {
+        height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .screen_input {
+        margin: 10px;
+        ;
+    }
+
+    .btnControl {
+        background-color: green;
+        border: 0px;
+        height: 30px;
+        width: 100px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+    #tblLogin table tr {
+        height: 30px;
+    }
+
+    /* #tblLogin table tr .td_input{
+        width:  280px;
+    } */
+    #tblLogin table tr input {
+        width: 250px;
+    }
+</style>
+
+<body>
+
+
+    <div class="container">
+
+        <div style="background-color: white;height: 280px;padding: 50px; border-radius: 10px;">
+            <h1>Register</h1>
+            <div style="text-align: right;" id="tblLogin">
+                <table>
+                    <tr>
+                        <td>FirstName</td>
+                        <td class="td_input"><input type="text" name="firstName" id="firstName" /></td>
+                    </tr>
+                    <tr>
+                        <td>LastName</td>
+                        <td class="td_input"><input type="text" name="lastName" id="lastName" /></td>
+                    </tr>
+                    <tr>
+                        <td>Email</td>
+                        <td class="td_input"><input type="text" name="email" id="email" style="width: 192px;" />
+                            <button type="button" id="btnCheckDup">Check</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td class="td_input"><input type="text" name="password" id="password" /></td>
+                    </tr>
+                    <tr>
+                        <td>Confirm Password</td>
+                        <td class="td_input"><input type="text" name="conpassword" id="conpassword" /></td>
+                    </tr>
+
+                </table>
+
+                <div style="margin-top: 10px;;">
+                    <a href="/login" class="btnControl"><button type="button" class="btnControl">Login</button></a>
+                    <button type="button" class="btnControl" onclick="btnSubmitUser()">Save</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+
+
+
+<!-- <div id="login-form-wrap">
+    <h2>Login</h2>
+    <form id="login-form" method="post" action="/login">
+        <p>
+        <input type="text" id="username" name="username" placeholder="Username" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input type="submit" id="login" value="Login">
+        </p>
+    </form>
+    <div id="create-account-wrap">
+        <p>Not a member? <a href="#">Create Account</a><p>
+    </div>
+</div>    -->

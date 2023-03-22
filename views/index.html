@@ -35,7 +35,7 @@
                 let img =    $('<img src="/Images/'+movie.movie_cover+'" />');
                 let time =  $('<div class="timeShow"> <span> Last episode'+ movie.movie_release_date+'</span></div>');
                 let name = $('<div><strong>'+movie.movie_name+'</strong></div>');
-                let btn =$('<div class="btnDownload"><span>MORE INFO</span></div>');
+                let btn =$('<div class="btnDownload"><a href="/movie/'+movie.movie_id+'" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>');
                 card.append(img);
                 card.append(time);
                 card.append(name);

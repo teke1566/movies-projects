@@ -22,15 +22,27 @@ router.get('/api/movie/:id',(req,res,next)=>{
 
 
 router.post('/cookie/cart', (req, res, next) => {
-    var obj = [];
-    obj.push(req.body)
+    var obj = {};
+   // var arrObj = [];
 
-    res.cookie('cookieTicket', obj)
+   console.log(req.body)
+    obj ={
+        movie_id:req.body.movie_id,
+        movie_name:req.body.movie_name,
+        theater:req.body.theater,
+        seatno:req.body.seatno,
+        getDate:req.body.getDate,
+        getTime:req.body.getTime,
+        price:req.body.price,
+        discount:req.body.discount,
+        total_price:req.body.total_price
 
+    }
+
+   // arrObj.push(obj)
+    res.cookie('cookieTicket', JSON.stringify(obj));
     console.log(obj)
-
     res.send(obj)
-
 })
 
 
@@ -41,7 +53,7 @@ router.get('/movie/:id', (req, res, next) => {
 
 
 
-router.get('/movie/ticket/', (req, res, next) => {
+router.get('/history/ticket/', (req, res, next) => {
 
 
     res.sendFile(path.join(__dirname, "../views",'movie_ticket.html'))

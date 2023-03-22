@@ -11,6 +11,8 @@ var homeRoute = require("./controller/homeController");
 var adminRoute = require("./controller/adminController");
 var movieDetailRoute = require("./controller/moviedetailController");
 const userRoute=require("./controller/userController")
+var usersRoute=require("./controller/usersController")
+var ticketRoute=require("./controller/movieticketController")
 
 
 //Read the parameters from post request
@@ -26,6 +28,8 @@ app.use(adminRoute);
 app.use(homeRoute);
 app.use(movieDetailRoute);
 app.use(userRoute);
+app.use(usersRoute);
+app.use(ticketRoute);
 
 
 //from teketsel login part

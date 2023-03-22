@@ -9,9 +9,29 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script>
 
+    var payment = false;
     $(document).ready(function () {
+
+        var getFirstNm = $.cookie("firstNm");
+        var getLastNm = $.cookie("lastNm");
+        var getRoleId = $.cookie("role_id");
+
+        var htmlLogin = "";
+        // $("#checkLogIn").remove();
+        if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            $("#checkLogIn").append(htmlLogin);
+
+        } else {
+
+            htmlLogin = '<a href="/login" style="color: white;">Login</a>';
+            $("#checkLogIn").append(htmlLogin);
+        }
+
+        loadCategoryData()
         var currentDate = new Date()
 
 
@@ -30,8 +50,71 @@
 
         getDataMovie()
 
-    });
 
+
+
+        $("#btnPayment").click(function () {
+            console.log(payment)
+            if (payment == true) {
+                console.log('d')
+                var getEmail = $.cookie("email");
+                console.log(getEmail)
+                if (getEmail == undefined) {
+                    window.location.href = "http://localhost:3000/login";
+                } else {
+                    var remark = $("#remark").val().trim();
+                    if (remark != "") {
+                        var getMyTicket = $.cookie("cookieTicket");
+                        var getUserId = $.cookie("userID");
+                        var ticketInfor = JSON.parse(getMyTicket);
+                        var showtime = ticketInfor.getDate + ticketInfor.getTime;
+                        var discount = ticketInfor.discount;
+                        var price = ticketInfor.price;
+                        var user_id = getUserId;
+                        var movie_id = ticketInfor.movie_id;
+                        var theater = ticketInfor.theater;
+                        var seatno = ticketInfor.seatno;
+                        var totalprice = ticketInfor.total_price
+
+                        console.log(user_id);
+
+                        $.ajax('/api/ticket/add', {
+                            "type": "POST",
+                            "data": {
+                                'showtime': showtime,
+                                'discount': discount,
+                                'price': price,
+                                'user_id': user_id,
+                                'movie_id': movie_id,
+                                'seatno': seatno,
+                                'remark': remark,
+                                'totalprice': totalprice
+                            }
+                        }).done(function (data) {
+                            console.log(data)
+
+                            hideTicketInfor();
+                            $(".numCart").text("0");
+
+                        }).fail(function () {
+                            console.log("fail");
+                        })
+                    }
+                }
+            } else {
+                alert("Please Save tickets")
+                return false;
+            }
+
+        })
+
+    });
+    function hideTicketInfor() {
+        // $("#removeTicket").remove()
+        // var html = "<h2>Congratulations enjoy your movie times</h2>"
+        // $("#dataTicket").append(html);
+       
+    }
 
 
     function getDataMovie() {
@@ -54,6 +137,13 @@
             var price_id = data.rows[0].price_id;
             var theater = data.rows[0].theater;
             var cate_name = data.rows[0].cate_name;
+            var price = data.rows[0].price_id;
+            var discount = "5";
+
+            var coverImg = '<img src="/Images/' + movie_cover + '" width="200px" style="border-radius: 15%; border: 2px solid white; margin-left: 10px;">'
+            var videoLink = ' <iframe width="100%" height="385" src="https://www.youtube.com/embed/' + movie_link + '" frameborder="0" allowfullscreen></iframe>'
+            $("#coverMovie").append(coverImg);
+            $("#movie_links").append(videoLink);
 
             $(".theater").text(theater);
             $(".movie_release_date").text(movie_release_date);
@@ -61,10 +151,8 @@
             $(".cate_name").text(cate_name);
             $(".movie_view").text(movie_view);
             $(".movie_desc").text(movie_desc);
-
-
-
-
+            $(".price").text(price);
+            $(".discount").text(discount);
 
 
         }).fail(function () {
@@ -129,8 +217,8 @@
 
         if (qty != 0 && getTime != "" && getDate != "") {
 
-            var price =10;
-            var discount =5;
+            var price = 10;
+            var discount = 5;
 
             $("#dataTicket").css('display', '');
             $(".seatno").text(seatArr)
@@ -140,12 +228,21 @@
             $('.btnSaveTicket, input[name="seat"], .btnDis, .btnDis').attr('disabled', 'disabled');
             $('.btnAddMore').css('display', '');
 
-            $(".price").text(price);
-            $(".discount").text(discount);
-            var totalPrice = (price*qty) - (price*qty)*(discount/100);
+            //  $(".price").text(price);
+            //  $(".discount").text(discount);
+            var totalPrice = (price * qty) - (price * qty) * (discount / 100);
             $(".total_price").text(totalPrice);
 
+            var getFirstNm = $.cookie("firstNm");
+            var getLastNm = $.cookie("lastNm");
+            if (getFirstNm != undefined && getLastNm != undefined) {
+                $('.fullNm').text(getFirstNm + " " + getLastNm)
+            }
+
+
             var addCart = 0;
+
+            console.log("seatArr", seatArr);
 
             $('.numCart').text(parseInt(addCart) + 1);
 
@@ -154,8 +251,8 @@
                 "data": {
                     'movie_id': 1,
                     'movie_name': $(".movie_name").text(),
-                    'theater': $(".theater").text(),
-                    'seatno': seatArr,
+                    'theater': $(".theater1").text(),
+                    'seatno': JSON.stringify(seatArr),
                     'getDate': getDate,
                     'getTime': getTime,
                     'price': price,
@@ -164,6 +261,7 @@
                 }
             }).done(function (data) {
                 console.log(data)
+                payment = true;
 
             }).fail(function () {
                 console.log("fail");
@@ -179,10 +277,27 @@
     function addTiciket() {
         $('.btnSaveTicket, input[name="seat"], .btnDis, .btnDis').attr("disabled", false)
         $('.btnAddMore').css('display', 'none');
+        payment = false;
 
     }
 
 
+    function loadCategoryData() {
+        $.ajax('/api/categories', {
+            "type": "get",
+        }).done((res) => {
+            categories = res;
+            let u = $("<ul></ul>")
+            for (let category of res) {
+                u.append('<li><a href="#">' + category.cate_name + '</a></li>')
+            }
+            u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
+            $(".nav").append(u);
+        })
+            .fail(() => {
+                console.log("fail");
+            })
+    }
 
 
 </script>
@@ -266,7 +381,7 @@
     .numCart {
         color: red;
         position: absolute;
-        right: 99px;
+        right: 25px;
         top: 15px;
         font-weight: bold;
     }
@@ -277,28 +392,17 @@
     <div class="container">
 
         <div class="myHeader">
-            <div class="logo"><img src="/Images/logo12.png" width="155px"></div>
+            <div class="logo"><img src="/img/logo12.png" width="155px"></div>
             <div class="nav">
-                <ul>
-                    <li><a href="#">Romance</a></li>
-                    <li><a href="#">Comedy</a></li>
-                    <li><a href="#">Fantasy</a></li>
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Horror</a></li>
-                    <li><a href="#">Thriller </a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
 
             </div>
-            <div class="boxSearch">
-                <label for=""><a href="/movie/ticket/"><img src="/img/mvoie_cart.png" width="30px" /><span class="numCart">0</span></a></label>
+            <div class="boxSearch" style="color: white;">
+                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                            class="numCart">0</span></a></label>
 
-                <label for="" class="conLogin">
-                    <a href="#">Login</a>
-                </label>
-                <label for="" class="conLogin">
-                    <a href="#"><img src="/Images/search.png" width="25px" /></a>
-                </label>
+
 
             </div>
 
@@ -309,18 +413,17 @@
             <div style="padding-top: 100px;width: 100%; margin: 5px; color: white;">
                 <div style="width: 50%;float: left;">
                     <div style="width: 100%;height: 300px;">
-                        <div style="width: 30%; ;  float: left;">
-                            <img src="/Images/m3.jpg" width="200px"
-                                style="border-radius: 15%; border: 2px solid white; margin-left: 10px;">
+                        <div style="width: 30%; ;  float: left;" id="coverMovie">
+
 
                         </div>
 
                         <div style="width: 70%; float: left;">
                             <span style="text-align: left;">
-                                <h3>THEATER : <span class="theater"></span></h3>
+                                <h3>THEATER : <span class="theater theater1"></span></h3>
                                 <h3>RELEASE : <span class="movie_release_date"></span></h3>
                                 <h3>TITLTE : <span class="movie_name"></span> </h3>
-                                <h3><label for=""><span class="cate_name"></span> </label>&nbsp;
+                                <h3><label for="">Type : <span class="cate_name"></span> </label>&nbsp;
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <label for=""> VIEW: <span class="movie_view"></label>
                                 </h3>
@@ -465,15 +568,25 @@
                                         </tr>
                                         <tr>
                                             <th>Total Price </th>
-                                            <td>:$ <span class="total_price"></span> </td>
+                                            <td>: $ <span class="total_price"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <th>User </th>
+                                            <td>: <span class="fullNm"></span> </td>
                                         </tr>
                                     </table>
                                 </div>
+                                <div style="margin-top: 5px;">
+                                    <input type="text" style="width: 190px;" id="remark" placeholder="Bank Account">
+                                </div>
+                                <span style="text-align: center;">
+
+                                    <Button
+                                        style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 35px;"
+                                        id="btnPayment">
+                                        Payment</Button></span>
                             </div>
-                            <span style="text-align: center;">
-                                <Button
-                                    style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 47px;">
-                                    Payment</Button></span>
+
                         </div>
                     </div>
 
@@ -481,8 +594,9 @@
 
                 </div>
                 <div style="width: 50%;float: left;height: 500px;">
-                    <iframe width="100%" height="385" src="https://www.youtube.com/embed/nqye02H_H6I" frameborder="0"
-                        allowfullscreen></iframe>
+                    <div id="movie_links">
+
+                    </div>
 
                     <h3>Description:
                         <p class="movie_desc">
@@ -504,12 +618,13 @@
             <div class="flex-container">
                 <div class="flex-item-left">
                     <h4>About Us</h4>
-                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                        Exercitationem voluptatum ipsa nobis laboriosam, illum vel quam. Blanditiis porro voluptatum
-                        corrupti, repellat tempora ullam temporibus ex aliquid officiis officia atque aliquam.</p>
-
+                    <p style="text-align: justify;">We are an online database of
+                        information related to films, television series, podcasts,
+                        home videos, video games, and streaming content online –
+                        including cast, production crew and personal biographies,
+                        plot summaries, trivia, ratings, and fan and critical reviews.
                     <h5>Tel: +123456789</h5>
-                    <h5>Email: phin.phearun2013@gmail.com</h5>
+                    <h5>Email: info@moviesite.com</h5>
 
                     <div>
                         <span class="boxEmail"> Enter your Email</span>
@@ -520,20 +635,21 @@
                 <div class="flex-item-center">
                     <h4>Developed By</h4>
                     <ul>
-                        <li>Name: <strong> Phearun Phin</strong></li>
-                        <li>Email: <strong>phin.phearun2013@gmail.com</strong></li>
+                        <li>Name: <strong>Phearun Phin</strong></li>
+                        <li>Name: <strong>Kevin Chemutai</strong></li>
+                        <li>Name: <strong>Meseret Yihun Amare</strong></li>
+                        <li>Name: <strong>Teketsel Mengistu Beyene</strong></li>
 
                     </ul>
 
                     <h4>Latest Tweet</h4>
-                    <ul>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                    </ul>
+                    <ol>
+                        <li>Prepare for eye-popping, jaw-dropping, non-stopping fun! ⚡️
+                            SHAZAM! FURY OF THE GODS – now playing only in theaters. Get tickets now</li>
+                        <li>Actors - What one word would you say describes your character?
+                            Writer(s) - What's your inspiration for these movies?</li>
+                        <li>What are some of the things you and your character have in common? #MovieNight</li>
+                    </ol>
 
 
                 </div>
@@ -542,10 +658,10 @@
 
                     <div class="grid-movies">
 
-                        <div class="movies1"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies2"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies3"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies4"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies1"><img src="img/m12.jpg" /></div>
+                        <div class="movies2"><img src="img/m5.jpg" /></div>
+                        <div class="movies3"><img src="img/m7.jpg" /></div>
+                        <div class="movies4"><img src="img/m13.jpg" /></div>
 
                     </div>
                 </div>
@@ -556,19 +672,9 @@
             <hr />
             <div>
                 <div class="nav">
-                    <ul>
-                        <li><a href="#">Today</a></li>
-                        <li><a href="#">TV Series</a></li>
-                        <li><a href="#">Trailers</a></li>
-                        <li><a href="#">Series Calendar</a></li>
-                        <li><a href="#">DMCA</a></li>
-                        <li><a href="#">ADS Partnership </a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-
                 </div>
                 <div class="boxSearch">
-                    <img src="/Images/logo12.png" width="100px" />
+                    <img src="img/logo12.png" width="100px" />
                 </div>
             </div>
 

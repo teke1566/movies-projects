@@ -36,10 +36,14 @@ $(document).ready(function(){
     
     loadMovieData();
 
-    function handleEdit(obj){
-        console.log(obj);
-    }
+    
 });
+function handleEdit(elem){
+    console.log("hello")
+    var movie_id = $(elem).attr("data-movie_id");
+    console.log(movie_id)
+
+}
 
 // function handleEdittest(e){
 //     console.log("jd")
@@ -64,9 +68,9 @@ function loadMovieData(){
                 row.append(d);
                 
             }
-           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" onlick="handleEdit('+movie+')" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
-           //let actions = $('<td><a href="#editMovieModal" class="edits" ><i class="material-icons"  onlick="handleEdittest(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
-           
+           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
+           //let actions = $('<td><button type="button" onclick="handleEdit1(this)">ok </button><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onlick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
+          
            row.append(actions);
             $('#main').append(row);
 

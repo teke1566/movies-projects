@@ -6,33 +6,125 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movies | Sign in </title>
-    <link rel="stylesheet" href="./login-styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
 
 </head>
 
-<style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 
+<script>
+    function getlogin() {
+
+        var email = $("#email").val().trim();
+        var password = $("#password").val().trim()
+        if (email == "" || password == "") {
+            alert("Pleas Enter your email and password! ");
+            return false;
+        } else {
+            $.ajax('/api/login', {
+                "type": "POST",
+                "data": {
+                    'email': email,
+                    'password': password
+                }
+            }).done(function (data) {
+                console.log(data)
+                if (data == "Success for admin") {
+                    window.location.href = "http://localhost:3000/admin";
+                } else if (data == "Success for customer") {
+                    window.location.href = "http://localhost:3000/";
+                } else if (data == "Invalid") {
+                    alert("Invalid email or password");
+                }
+
+            }).fail(function () {
+                console.log("fail");
+            })
+        }
+
+
+    }
+</script>
+
+<style>
+    body {
+        background-image: url("/img/bgLogin.jpg");
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-size: 100% 950px;
+    }
+
+    .container {
+        height: 600px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .screen_input {
+        margin: 10px;
+        ;
+    }
+
+    .btnControl {
+        background-color: green;
+        border: 0px;
+        height: 30px;
+        width: 100px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
 </style>
 
 <body>
-    <div id="login-form-wrap">
-        <h2>Login</h2>
-        <form id="login-form" method="post" action="/login">
-            <p>
-            <input type="text" id="username" name="username" placeholder="Username" required><i class="validation"><span></span><span></span></i>
-            </p>
-            <p>
-            <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
-            </p>
-            <p>
-            <input type="submit" id="login" value="Login">
-            </p>
-        </form>
-        <div id="create-account-wrap">
-            <p>Not a member? <a href="#">Create Account</a><p>
-        </div><!--create-account-wrap-->
-    </div>   
+
+
+    <div class="container">
+
+        <div style="background-color: white;height: 200px;padding: 50px; border-radius: 10px;">
+            <h1>Login</h1>
+            <div style="text-align: center;">
+                <table>
+                    <tr>
+                        <td>UserName</td>
+                        <td><input type="text" name="email" id="email" /></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input type="text" name="password" id="password" /></td>
+                    </tr>
+                </table>
+
+                <div style="margin-top: 10px;">
+                    <button type="button" class="btnControl" onclick="getlogin()">Login</button>
+                    <a href="/register" class="btnControl"><button type="button"
+                            class="btnControl">Register</button></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </body>
 
 </html>
+
+
+
+
+<!-- <div id="login-form-wrap">
+    <h2>Login</h2>
+    <form id="login-form" method="post" action="/login">
+        <p>
+        <input type="text" id="username" name="username" placeholder="Username" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input type="email" id="email" name="email" placeholder="Email Address" required><i class="validation"><span></span><span></span></i>
+        </p>
+        <p>
+        <input type="submit" id="login" value="Login">
+        </p>
+    </form>
+    <div id="create-account-wrap">
+        <p>Not a member? <a href="#">Create Account</a><p>
+    </div>
+</div>    -->

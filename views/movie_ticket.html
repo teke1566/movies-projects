@@ -9,13 +9,161 @@
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
 </head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script>
 
-    
+    $(document).ready(function () {
+
+        var getMyTicket = $.cookie("cookieTicket");
+        var getFirstNm = $.cookie("firstNm");
+        var getLastNm = $.cookie("lastNm");
+        var getRoleId = $.cookie("role_id");
+        var getUserId = $.cookie("userID");
+
+        var htmlLogin = "";
+        // $("#checkLogIn").remove();
+        if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            $("#checkLogIn").append(htmlLogin);
+        } else {
+
+            htmlLogin = '<a href="/login" style="color: white;">Login</a>';
+            $("#checkLogIn").append(htmlLogin);
+        }
+
+        if(getMyTicket == ""){
+            hideTicketInfor();
+        }else{
+            $(".numCart").text("1");
+        }
+        loadCategoryData()
+        loadHistoryRecord()
+
+        var ticketInfor = JSON.parse(getMyTicket);
+
+        console.log(ticketInfor.seatno.length)
+
+        $(".movie_name").text(ticketInfor.movie_name)
+        $(".theater").text(ticketInfor.theater)
+        $(".seatno").text(ticketInfor.seatno)
+        $(".showtime").text(ticketInfor.getTime);
+        $(".showdate").text(ticketInfor.getDate);
+        $(".price").text(ticketInfor.price);
+        $(".discount").text(ticketInfor.discount);
+        $(".total_price").text(ticketInfor.total_price);
+        $('.fullNm').text(getFirstNm + " " + getLastNm)
 
 
 
-    
+        $("#btnPayment").click(function () {
+            var remark = $("#remark").val().trim();
+
+            $("#dataHirstoryRecord").empty();
+            if (remark != "") {
+                var showtime = ticketInfor.getDate + ticketInfor.getTime;
+                var discount = ticketInfor.discount;
+                var price = ticketInfor.price;
+                var user_id = getUserId;
+                var movie_id = ticketInfor.movie_id;
+                var theater = ticketInfor.theater;
+                var seatno = ticketInfor.seatno;
+                var totalprice = ticketInfor.total_price
+
+                console.log(user_id);
+
+                $.ajax('/api/ticket/add', {
+                    "type": "POST",
+                    "data": {
+                        'showtime': showtime,
+                        'discount': discount,
+                        'price': price,
+                        'user_id': user_id,
+                        'movie_id': movie_id,
+                        'seatno': seatno,
+                        'remark': remark,
+                        'totalprice': totalprice
+                    }
+                }).done(function (data) {
+                    console.log(data)
+
+                    hideTicketInfor();
+                    loadHistoryRecord() ;
+
+                }).fail(function () {
+                    console.log("fail");
+                })
+
+
+                console.log(movie_id)
+            } else {
+                alert("Please Bank Account")
+            }
+
+        })
+    })
+
+    function hideTicketInfor() {
+        $("#removeTicket").remove()
+        var html = "<h2>Congratulations enjoy your movie times</h2>"
+        $("#dataTicket").append(html);
+        $(".numCart").text("0");
+    }
+
+    function loadCategoryData() {
+        $.ajax('/api/categories', {
+            "type": "get",
+        }).done((res) => {
+            categories = res;
+            let u = $("<ul></ul>")
+            for (let category of res) {
+                u.append('<li><a href="#">' + category.cate_name + '</a></li>')
+            }
+            u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
+            $(".nav").append(u);
+        }).fail(() => {
+            console.log("fail");
+        })
+    }
+
+
+    function loadHistoryRecord() {
+        $.ajax('/api/ticket/history', {
+            "type": "get",
+        }).done((res) => {
+            var html_tr = "";
+            for(var i=0; i<res.length;i++){
+                html_tr += '<tr>'+
+                            '<td>'+res[i].tickets_id +'</td>'+
+                            '<td>'+ res[i].movie_id+'</td>'+
+                            '<td>'+res[i].movie_id +'</td>'+
+                            '<td>'+res[i].seatno +'</td>'+
+                            '<td>'+res[i].showtimes +'</td>'+
+                            '<td>'+res[i].movie_id +'</td>'+
+                            '<td>%'+res[i].discount +'</td>'+
+                            '<td>$'+res[i].totalprice +'</td>'+
+                            '<td>'+res[i].user_id +'</td>'+
+                        '</tr>'
+            }
+            
+
+
+            if(res.length ==0){
+                html_tr += '<tr>'+
+                            '<td  colspan="9">No history record</td>'+
+                            '</tr>'
+            }
+            $("#dataHirstoryRecord").append(html_tr);
+
+            console.log(res)
+           
+            
+                             
+        }).fail(() => {
+            console.log("fail");
+        })
+    }
+
+
 
 
 
@@ -25,9 +173,20 @@
     .numCart {
         color: red;
         position: absolute;
-        right: 99px;
+        right: 25px;
         top: 15px;
         font-weight: bold;
+    }
+
+    #historyRec tr th,
+    #historyRec tr td {
+        border: 1px solid white;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    #historyRec {
+        margin: 10px;
     }
 </style>
 
@@ -36,28 +195,17 @@
     <div class="container">
 
         <div class="myHeader">
-            <div class="logo"><img src="/Images/logo12.png" width="155px"></div>
+            <div class="logo"><a href="/"><img src="/img/logo12.png" width="155px"></a></div>
             <div class="nav">
-                <ul>
-                    <li><a href="#">Romance</a></li>
-                    <li><a href="#">Comedy</a></li>
-                    <li><a href="#">Fantasy</a></li>
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Horror</a></li>
-                    <li><a href="#">Thriller </a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
 
             </div>
-            <div class="boxSearch">
-                <label for=""><img src="/Images/mvoie_cart.png" width="30px" /><span class="numCart">0</span></label>
+            <div class="boxSearch" style="color: white;">
+                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                            class="numCart">0</span></a></label>
 
-                <label for="" class="conLogin">
-                    <a href="#">Login</a>
-                </label>
-                <label for="" class="conLogin">
-                    <a href="#"><img src="/Images/search.png" width="25px" /></a>
-                </label>
+
 
             </div>
 
@@ -66,13 +214,13 @@
         <div class="" style="background-color: #2f363b; height: 900px;border: 5px solid white;">
 
             <div style="padding-top: 100px;width: 100%; margin: 5px; color: white;">
-                <div style="width: 40%;float: left;">
-                    <h3>Cart </h3>
+                <div style="width: 30%;float: left;">
+                    <h3>Ticket Information </h3>
 
                     <div style="width: 100%;  float: left;" id="dataTicket">
 
-                        <div style="border: 1px solid white;height: 350px;  margin: 13px;">
-                            <div style="padding: 20px;">
+                        <div style="height: 350px; margin: 13px;" id="removeTicket">
+                            <div style="border: 1px solid white; padding: 20px; ">
 
                                 <table style="text-align: left !important;">
                                     <tr>
@@ -105,22 +253,67 @@
                                     </tr>
                                     <tr>
                                         <th>Total Price </th>
-                                        <td>:$ <span class="total_price"></span> </td>
+                                        <td>: $ <span class="total_price"></span> </td>
                                     </tr>
+                                    <tr>
+                                        <th>User </th>
+                                        <td>: <span class="fullNm"></span> </td>
+                                    </tr>
+
                                 </table>
                             </div>
+                            <div>
+                                <input type="text" style="width: 190px;" id="remark" placeholder="Bank Account">
+                            </div>
+                            <span style="text-align: center;">
+
+                                <Button
+                                    style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 35px;"
+                                    id="btnPayment">
+                                    Payment</Button></span>
                         </div>
-                        <span style="text-align: center;">
-                            <Button
-                                style="padding: 5px; background-color: pink; border-radius: 7px;  width: 200px;  font-size: 19px;  height: 47px;">
-                                Payment</Button></span>
+
+
+
                     </div>
 
 
 
                 </div>
-                <div style="width: 60%;float: left;height: 500px;">
+                <div style="width: 70%;float: left;height: 500px;">
                     <h3>History Records</h3>
+
+                    <table id="historyRec">
+                        <colgroup>
+                            <col style="width:5%;">
+                            <col style="width:20%;">
+                            <col style="width:10%;">
+                            <col style="width:12%;">
+                            <col style="width:15%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:8%;">
+                            <col style="width:15%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>MOVIE TITLE</th>
+                                <th>THEATER</th>
+                                <th>SEAT NO</th>
+                                <th>SHOWTIME</th>
+                                <th>PRICE</th>
+                                <th>DISCOUNT</th>
+                                <th>TOTAL</th>
+                                <th>USER</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="dataHirstoryRecord">
+                            
+                            
+                        </tbody>
+                    </table>
 
                 </div>
             </div>
@@ -136,12 +329,13 @@
             <div class="flex-container">
                 <div class="flex-item-left">
                     <h4>About Us</h4>
-                    <p style="text-align: justify;">Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                        Exercitationem voluptatum ipsa nobis laboriosam, illum vel quam. Blanditiis porro voluptatum
-                        corrupti, repellat tempora ullam temporibus ex aliquid officiis officia atque aliquam.</p>
-
+                    <p style="text-align: justify;">We are an online database of
+                        information related to films, television series, podcasts,
+                        home videos, video games, and streaming content online –
+                        including cast, production crew and personal biographies,
+                        plot summaries, trivia, ratings, and fan and critical reviews.
                     <h5>Tel: +123456789</h5>
-                    <h5>Email: phin.phearun2013@gmail.com</h5>
+                    <h5>Email: info@moviesite.com</h5>
 
                     <div>
                         <span class="boxEmail"> Enter your Email</span>
@@ -152,20 +346,21 @@
                 <div class="flex-item-center">
                     <h4>Developed By</h4>
                     <ul>
-                        <li>Name: <strong> Phearun Phin</strong></li>
-                        <li>Email: <strong>phin.phearun2013@gmail.com</strong></li>
+                        <li>Name: <strong>Phearun Phin</strong></li>
+                        <li>Name: <strong>Kevin Chemutai</strong></li>
+                        <li>Name: <strong>Meseret Yihun Amare</strong></li>
+                        <li>Name: <strong>Teketsel Mengistu Beyene</strong></li>
 
                     </ul>
 
                     <h4>Latest Tweet</h4>
-                    <ul>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                        <li>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Exercitationem voluptatum ipsa
-                            nobis laboriosam, illum vel quam.</li>
-                    </ul>
+                    <ol>
+                        <li>Prepare for eye-popping, jaw-dropping, non-stopping fun! ⚡️
+                            SHAZAM! FURY OF THE GODS – now playing only in theaters. Get tickets now</li>
+                        <li>Actors - What one word would you say describes your character?
+                            Writer(s) - What's your inspiration for these movies?</li>
+                        <li>What are some of the things you and your character have in common? #MovieNight</li>
+                    </ol>
 
 
                 </div>
@@ -174,10 +369,10 @@
 
                     <div class="grid-movies">
 
-                        <div class="movies1"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies2"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies3"><img src="/Images/m3.jpg" /></div>
-                        <div class="movies4"><img src="/Images/m3.jpg" /></div>
+                        <div class="movies1"><img src="img/m12.jpg" /></div>
+                        <div class="movies2"><img src="img/m5.jpg" /></div>
+                        <div class="movies3"><img src="img/m7.jpg" /></div>
+                        <div class="movies4"><img src="img/m13.jpg" /></div>
 
                     </div>
                 </div>
@@ -188,19 +383,9 @@
             <hr />
             <div>
                 <div class="nav">
-                    <ul>
-                        <li><a href="#">Today</a></li>
-                        <li><a href="#">TV Series</a></li>
-                        <li><a href="#">Trailers</a></li>
-                        <li><a href="#">Series Calendar</a></li>
-                        <li><a href="#">DMCA</a></li>
-                        <li><a href="#">ADS Partnership </a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-
                 </div>
                 <div class="boxSearch">
-                    <img src="/Images/logo12.png" width="100px" />
+                    <img src="/img/logo12.png" width="100px" />
                 </div>
             </div>
 
