@@ -26,6 +26,7 @@
 
 .nav {
 	display: inline-block;
+	cursor: pointer;
 }
 
 .nav ul {
@@ -222,4 +223,7 @@
 }
 .flex-item-center ul li{
 	list-style: none;
+}
+.nav li a:hover{
+	color: rgb(136, 121, 121);
 }

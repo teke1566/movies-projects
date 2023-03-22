@@ -47,8 +47,8 @@
         }).done((res)=>{
            categories = getUniqueCategorieName(res);
            for(let category of categories){
-                let dataRow = $('<div class="dataRowMovie"></div>')
-                let p = $('<p class="movieCategory">'+ category[0].toUpperCase()+category.slice(1)+'</p>');
+                let dataRow = $('<div class="dataRowMovie '+category+'"></div>')
+                let p = $('<p class="movieCategory" data-category="'+category+'" onclick="filterCategories(this)">'+ category[0].toUpperCase()+category.slice(1)+'</p>');
                 dataRow.append(p);
                 let container = $('<div class="grid-container" id="'+category+'"></div>');
                 dataRow.append(container);
@@ -79,7 +79,7 @@
             categories=res;
             let u = $("<ul></ul>")
             for(let category of res){
-                u.append('<li><a href="#">'+category.cate_name+'</a></li>')
+                u.append('<li><a href="#" data-category="'+category.cate_name+'" onclick="filterCategories(this)">'+category.cate_name+'</a></li>')
             }
             u.append('<li><a href="#">'+"Contact Us"+'</a></li>')
             $(".nav").append(u);
@@ -87,6 +87,12 @@
         .fail(()=>{
             console.log("fail");
         })
+    }
+
+    function filterCategories(catElem){
+        let categorie = $(catElem).attr("data-category");
+        console.log(categorie);
+        $(".movie-list").children().not("."+categorie).remove();
     }
     
     function getUniqueCategorieName(movies){
@@ -207,6 +213,7 @@
 
 
     </div>
+    
 </body>
 
 </html>
