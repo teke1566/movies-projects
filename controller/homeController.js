@@ -30,4 +30,19 @@ router.get('/api/categories', (req, res)=>{
         res.send(results.rows);
     })
 })
+
+router.get('/api/movies/:id', async (req, res)=>{
+	const id = parseInt(req.params.id);
+	const query = 'SELECT * FROM tbl_movies WHERE movie_id = $1';
+  	const values = [id];
+	try {
+		const result =  await pool.query(query, values);
+		res.json(result.rows[0]);
+	} catch (err) {
+		console.error(err);
+		res.status(500).send('Error retrieving movie from database');
+	}
+})
+
+
 module.exports = router;

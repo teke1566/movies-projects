@@ -56,13 +56,34 @@ function handleEdit(elem){
 }
 
 function handleEdit(elem){
-    console.log("hello")
-    var movie_id = $(elem).attr("data-movie_id");
-    console.log(movie_id)
- 
+    let movie_id = $(elem).attr("data-movie_id");
+    let id = parseInt(movie_id);
+    $.ajax('/api/movies/'+id,{
+        "type":"GET",
+    }).done((res)=>{
+        //load movie categories into form
+        $.ajax('/api/categories',{
+            "type":"GET",
+        }).done((res)=>{
+            for(let category of res){
+                $('#editMovieModal').find('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
+            }
+        })
+        let movie = res;
+        //populate the fields using existing data
+        for(let key in movie){
+            if(key =='movie_name') $('#editMovieModal').find('#name').val(movie[key]);
+            else if(key == 'movie_id') $('#editMovieModal').find('#movie_id').val(movie[key]);
+            else if(key == 'movie_desc') $('#editMovieModal').find('#description').val(movie[key]);
+            else if(key == 'movie_link') $('#editMovieModal').find('#link').val(movie[key]);
+            else if(key == 'movie_release_date') $('#editMovieModal').find('#releaseDate').val(movie[key]);
+            else if(key == 'movie_view') $('#editMovieModal').find('#views').val(movie[key]);
+            else if(key == 'price_id') $('#editMovieModal').find('#price').val(movie[key]);
+            else if(key == 'cate_id') $('#editMovieModal').find('#category').val(movie[key]+"");
+            else if(key == 'theater') $('#editMovieModal').find('#theater').val(movie[key]+"");
+        }
+    })
 }
-
-
 
 function loadMovieData(){
     $.ajax('/api/movies-list',{
@@ -133,32 +154,7 @@ function loadMovieData(){
                     </tr>
                 </thead>
                 <tbody id ='main'>
-                    <!-- <tr>
-                        <td>
-                            <span class="custom-checkbox">
-                                <input type="checkbox" id="checkbox1" name="options[]" value="1">
-                                <label for="checkbox1"></label>
-                            </span>
-                        </td>
-                        <td>1</td>
-                        <td>action</td>
-                        <td>cover</td>
-                        <td>descr</td>
-                        <td>movie id</td>
-                        <td>links</td>
-                        <td>The Good Doctor</td>
-                        <td>2023-03-19</td>
-                        <td>8</td>
-                        <td>4</td>
-                                                    
-                        <td>
-                            <a href="#addMovieModal" class="add" data-toggle="modal"><i class="Material+Symbols+Outlined" data-toggle="tooltip" title="Add"><span class="material-symbols-outlined">
-                                add_circle
-                                </span></i></a>
-                            <a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                            <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                        </td>
-                    </tr>					 -->
+                    
                 </tbody>
             </table>
         </div>
@@ -168,7 +164,7 @@ function loadMovieData(){
     <div id="addMovieModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="/admin" enctype="multipart/form-data">
+                <form method="post" action="/movie/add" enctype="multipart/form-data">
                     <div class="modal-header">						
                         <h4 class="modal-title">Add Movie </h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -232,40 +228,60 @@ function loadMovieData(){
     <div id="editMovieModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form enctype="multipart/form-data" action="/movie/update" method="post">
                     <div class="modal-header">						
-                        <h4 class="modal-title">Edit Movie</h4>
+                        <h4 class="modal-title">Update Movie Data</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
-                    <div class="modal-body">					
+                    <div class="modal-body">	
                         <div class="form-group">
-                            <label>Title</label>
-                            <input type="text" class="form-control" required>
+                            <label>ID</label>
+                            <input type="text" class="form-control" name="movie_id" id="movie_id" readonly>
+                        </div>			
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" class="form-control" name="name" id="name" >
                         </div>
                         <div class="form-group">
                             <label>Description</label>
-                            <textarea class="form-control" required></textarea>
+                            <textarea class="form-control" name="description" id="description" ></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Director</label>
-                            <input type="text" class="form-control" required>
+                            <label>Cover</label>
+                            <input type="file" class="form-control" name="profilepic" id="profilepic" accept="image/*" >
                         </div>
                         <div class="form-group">
-                            <label>Release Date</label>
-                            <input type="date" class="form-control" required>
+                            <label>Link</label>
+                            <input type="text" name="link" id="link" class="form-control" >
                         </div>	
                         <div class="form-group">
-                            <label>Genre</label>
-                            <input type="text" class="form-control" required>
+                            <label>Release Date</label>
+                            <input type="date" name="releaseDate" id="releaseDate" class="form-control" >
                         </div>
                         <div class="form-group">
-                            <label>Rating </label>
-                            <input type="number" class="form-control" required>
+                            <label>Views </label>
+                            <input type="number" name="views" id="views"class="form-control" >
                         </div>
                         <div class="form-group">
-                            <label>Profile </label>
-                            <input type="text" class="form-control" required>
-                        </div>				
+                            <label>Theator </label>
+                            <select name="theater" id="theater" class="form-control form-control-select">
+                                <option value="1">theater 1</option>
+                                <option value="2">theater 2</option>
+                                <option value="3">theater 3</option>
+                                <option value="4">theater 4</option>
+                                <option value="5">theater 5</option>
+                                <option value="6">theater 6</option>
+                            </select>
+                        </div>	
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" id="category" class="form-control form-control-select" ></select>
+                        </div>	
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input name="price" id="price" class="form-control" /> 
+                        </div>	
+                        			
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
