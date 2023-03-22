@@ -53,7 +53,7 @@ router.post('/admin', upload.single('profilepic'), (req, res, next) => {
         if (results.rowCount > 0) {
 
             pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9)", [getNextUserId, movie_name, movie_description, file, movie_link, movie_releaseDate,movie_views, movie_category, movie_price  ], (error, results) => {
-                if (error) throw error;
+                //if (error) throw error;
                 console.log(results.rowCount)
                 res.status(200).json(results.rowCount);
             })
@@ -73,4 +73,11 @@ router.get('/admin', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'admin.html'));
 })
 
+router.get("/api/movies-list", (req, res, next) => {
+	
+    pool.query("select movie_id, movie_name,movie_desc, movie_cover,movie_link,movie_release_date,movie_view, cate_id,price_id from tbl_movies", (error, results) => {
+    //if (error) throw error;
+    res.send(results.rows);
+});
+});
 module.exports = router;
