@@ -89,11 +89,11 @@
         })
     }
 
-    function filterCategories(catElem){
-        let categorie = $(catElem).attr("data-category");
-        console.log(categorie);
-        $(".movie-list").children().not("."+categorie).remove();
-    }
+    // function filterCategories(catElem){
+    //     let categorie = $(catElem).attr("data-category");
+    //     console.log(categorie);
+    //     $(".movie-list").children().not("."+categorie).remove();
+    // }
     
     function getUniqueCategorieName(movies){
         let names = movies.map(m=>m.cate_name);
