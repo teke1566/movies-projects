@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movies</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+
+        var getMyTicket = $.cookie("cookieTicket");
+        var getFirstNm = $.cookie("firstNm");
+        var getLastNm = $.cookie("lastNm");
+        var getRoleId = $.cookie("role_id");
+        var getUserId = $.cookie("userID");
+
+        var htmlLogin = "";
+        // $("#checkLogIn").remove();
+        if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            $("#checkLogIn").append(htmlLogin);
+        } else {
+
+            htmlLogin = '<a href="/login" style="color: white;">Login</a>';
+            $("#checkLogIn").append(htmlLogin);
+        }
+
+        if (getMyTicket == "" || getMyTicket == undefined) {
+            $(".numCart").text("0");
+        } else {
+            $(".numCart").text("1");
+        }
+        loadCategoryData()
+
+
+        $(".keySearch").keyup(function (event) {
+            if (event.keyCode === 13) {
+                $(".btnSearch").click();
+            }
+        });
+
+        $(".btnSearch").click(function () {
+            var getKeySearch = $(".keySearch").val().trim();
+
+
+            getSearchData(getKeySearch);
+
+
+
+        })
+
+
+
+    })
+
+    function getSearchData(key) {
+
+
+        if (key == "") {
+            key = "all"
+        }
+        console.log(key)
+
+        $.ajax('/api/filter/' + key, {
+            "type": "GET",
+            "data": {
+                keyval: key
+            }
+        }).done(function (res) {
+            console.log(res)
+
+            let htm_div = "";
+
+            $("#listData").empty();
+
+            if (res.length > 0) {
+                $(".grid-container").removeClass('nodata')
+                $(".grid-container").removeClass('height500')
+                // grid-container
+                for (let i = 0; i < res.length; i++) {
+                    console.log(res[i].movie_name)
+                    htm_div += '<div class="cards">' +
+                        '<img src="/Images/' + res[i].movie_cover + '"/>' +
+                        '<div class="timeShow"> <span> Last episode' + res[i].movie_release_date + '</span></div>' +
+                        '<div><strong>' + res[i].movie_name + '</strong></div>' +
+                        '<div class="btnDownload"><a href="/movie/' + res[i].movie_id + '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>' +
+                        '</div>'
+                }
+
+                $("#listData").append(htm_div);
+
+            }else{
+                $(".grid-container").addClass('nodata')
+            }
+
+
+            // <div class="cards">
+            //     <img src="/Images/1679258975736-m1.jpg" />
+            //     <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
+            //     <div><strong>The Good Doctor</strong></div>
+            //     <div class="btnDownload"><span>MORE INFO</span></div>
+            // </div>
+
+
+        }).fail(function (err) {
+            console.log(err)
+        })
+
+    }
+
+
+
+
+
+    function loadCategoryData() {
+        $.ajax('/api/categories', {
+            "type": "get",
+        }).done((res) => {
+            categories = res;
+            let u = $("<ul></ul>")
+            for (let category of res) {
+                u.append('<li><a href="#">' + category.cate_name + '</a></li>')
+            }
+            u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
+            $(".nav").append(u);
+        }).fail(() => {
+            console.log("fail");
+        })
+    }
+
+
+
+
+
+
+
+
+</script>
+
+<style>
+    .numCart {
+        color: red;
+        position: absolute;
+        right: 25px;
+        top: 15px;
+        font-weight: bold;
+    }
+
+    .boxFilter {
+        height: 225px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+    }
+
+    .nodata {
+        background-image: url("/img/datnotfound.png");
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-size: 100% 100%;
+        height: 500px;
+    }
+    .height500{
+        height: 500px;
+    }
+
+    
+</style>
+
+<body>
+
+    <div class="container">
+
+        <div class="myHeader">
+            <div class="logo"><a href="/"><img src="/img/logo12.png" width="155px"></a></div>
+            <div class="nav">
+
+            </div>
+            <div class="boxSearch" style="color: white;">
+                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                            class="numCart">0</span></a></label>
+
+
+
+            </div>
+
+        </div>
+
+        <div class="" style="background-color: #2f363b; border: 5px solid white;">
+
+
+            <div class="boxFilter">
+
+                <div
+                    style="background-color: white;height: 25px;padding: 20px; border-radius: 10px;width: 500px;position: fixed;z-index: 99999 !important;">
+                    <!-- <input type="text" name="" style="width: 500px; height: 25px;"/> -->
+                    <label style="display: flex;align-self: center;">
+                        <input type="text" class="keySearch"
+                            style="width: 500px; height: 29px; border-radius: 5px 0px 0px 5px; border: 1px solid #9c9b9b;"
+                            placeholder="Search" />
+                        <img src="/img/search-icon-black.png" width="25" height="25"
+                            style="border: 1px solid #9999; padding: 3px;  border-radius: 0px 5px 5px 0px; cursor: pointer;"
+                            class="btnSearch" />
+                    </label>
+
+                </div>
+            </div>
+
+            <div>
+                <div class="dataRowMovie">
+                    <div class="grid-container height500" style="padding: 0px !important;" id="listData">
+                        <!-- <div class="cards">
+                            <img src="/Images/1679258975736-m1.jpg" />
+                            <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
+                            <div><strong>The Good Doctor</strong></div>
+                            <div class="btnDownload"><span>MORE INFO</span></div>
+                        </div> -->
+                        <!-- <div class="nodata">
+
+                        </div> -->
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="footer">
+
+            <div class="flex-container">
+                <div class="flex-item-left">
+                    <h4>About Us</h4>
+                    <p style="text-align: justify;">We are an online database of
+                        information related to films, television series, podcasts,
+                        home videos, video games, and streaming content online –
+                        including cast, production crew and personal biographies,
+                        plot summaries, trivia, ratings, and fan and critical reviews.
+                    <h5>Tel: +123456789</h5>
+                    <h5>Email: info@moviesite.com</h5>
+
+                    <div>
+                        <span class="boxEmail"> Enter your Email</span>
+                        <span class="boxEmail" style="background-color: rgb(241 150 1);color: white;"> Send</span>
+                    </div>
+
+                </div>
+                <div class="flex-item-center">
+                    <h4>Developed By</h4>
+                    <ul>
+                        <li>Name: <strong>Phearun Phin</strong></li>
+                        <li>Name: <strong>Kevin Chemutai</strong></li>
+                        <li>Name: <strong>Meseret Yihun Amare</strong></li>
+                        <li>Name: <strong>Teketsel Mengistu Beyene</strong></li>
+
+                    </ul>
+
+                    <h4>Latest Tweet</h4>
+                    <ol>
+                        <li>Prepare for eye-popping, jaw-dropping, non-stopping fun! ⚡️
+                            SHAZAM! FURY OF THE GODS – now playing only in theaters. Get tickets now</li>
+                        <li>Actors - What one word would you say describes your character?
+                            Writer(s) - What's your inspiration for these movies?</li>
+                        <li>What are some of the things you and your character have in common? #MovieNight</li>
+                    </ol>
+
+
+                </div>
+                <div class="flex-item-right">
+                    <h4>Top Movies</h4>
+
+                    <div class="grid-movies">
+
+                        <div class="movies1"><img src="img/m12.jpg" /></div>
+                        <div class="movies2"><img src="img/m5.jpg" /></div>
+                        <div class="movies3"><img src="img/m7.jpg" /></div>
+                        <div class="movies4"><img src="img/m13.jpg" /></div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <hr />
+            <div>
+                <div class="nav">
+                </div>
+                <div class="boxSearch">
+                    <img src="/img/logo12.png" width="100px" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</body>
+
+</html>

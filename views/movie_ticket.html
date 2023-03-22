@@ -30,8 +30,9 @@
             htmlLogin = '<a href="/login" style="color: white;">Login</a>';
             $("#checkLogIn").append(htmlLogin);
         }
+        console.log("getMyTicket" + getMyTicket)
 
-        if(getMyTicket == ""){
+        if(getMyTicket == "" || getMyTicket == undefined){
             hideTicketInfor();
         }else{
             $(".numCart").text("1");
@@ -131,17 +132,19 @@
             "type": "get",
         }).done((res) => {
             var html_tr = "";
+            console.log(res)
             for(var i=0; i<res.length;i++){
+
+                
                 html_tr += '<tr>'+
                             '<td>'+res[i].tickets_id +'</td>'+
-                            '<td>'+ res[i].movie_id+'</td>'+
-                            '<td>'+res[i].movie_id +'</td>'+
+                            '<td>'+ res[i].movie_name+'</td>'+
+                            '<td>'+res[i].theater +'</td>'+
                             '<td>'+res[i].seatno +'</td>'+
                             '<td>'+res[i].showtimes +'</td>'+
-                            '<td>'+res[i].movie_id +'</td>'+
+                            '<td>'+res[i].price_id +'</td>'+
                             '<td>%'+res[i].discount +'</td>'+
                             '<td>$'+res[i].totalprice +'</td>'+
-                            '<td>'+res[i].user_id +'</td>'+
                         '</tr>'
             }
             
@@ -200,7 +203,7 @@
 
             </div>
             <div class="boxSearch" style="color: white;">
-                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
                             class="numCart">0</span></a></label>
@@ -283,16 +286,16 @@
                 <div style="width: 70%;float: left;height: 500px;">
                     <h3>History Records</h3>
 
-                    <table id="historyRec">
+                    <table id="historyRec" style="text-align: center;">
                         <colgroup>
                             <col style="width:5%;">
                             <col style="width:20%;">
                             <col style="width:10%;">
-                            <col style="width:12%;">
+                            <col style="width:20%;">
                             <col style="width:15%;">
                             <col style="width:8%;">
                             <col style="width:8%;">
-                            <col style="width:8%;">
+                            <col style="width:10%;">
                             <col style="width:15%;">
                         </colgroup>
                         <thead>
@@ -305,7 +308,6 @@
                                 <th>PRICE</th>
                                 <th>DISCOUNT</th>
                                 <th>TOTAL</th>
-                                <th>USER</th>
 
                             </tr>
                         </thead>
