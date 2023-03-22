@@ -6,6 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Movie Details</title>
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -125,7 +126,7 @@ function loadMovieData(){
                 row.append(d);
                 
             }
-           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
+           let actions = $('<td style="display: flex"><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
           
            row.append(actions);
             $('#main').append(row);
