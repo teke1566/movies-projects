@@ -44,7 +44,7 @@ router.post('/movie/add', upload.single('profilepic'), (req, res, next) => {
                 }
                 else{
 
-                    res.status(200).json(results.rowCount);
+                    res.redirect("/admin");
                 }
             })
         }
@@ -81,7 +81,7 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
                     }
                     else{
     
-                        res.status(200).json("Movie updated successfully");
+                        res.redirect("/admin");
                     }
                 })
             }
@@ -90,7 +90,7 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
                     if (error) {
                         res.send(error.message);
                     } else {
-                        res.status(200).json("Movie updated successfully");
+                        res.redirect("/admin");
                     }
                 });   
             }
@@ -105,7 +105,7 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
 })
 
 router.delete('/movies/:id', (req, res) => {
-    const movieId = req.params.id;
+    const movieId = parseInt(req.params.id);
     pool.query('DELETE FROM tbl_movies WHERE movie_id = $1', [movieId], (error, results) => {
       if (error) {
         res.send(error.message);
