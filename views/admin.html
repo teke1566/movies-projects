@@ -84,7 +84,31 @@ function handleEdit(elem){
         }
     })
 }
+function handleDelete(elem){
+    let movie_id = $(elem).attr("data-movie_id");
+    let id = parseInt(movie_id);
+    // Find all elements with class "modal" and check if they have a "delete" button
+    $('.modal').each(function() {
+    const deleteButton = $(this).find('#deleteBtn');
+    if (deleteButton) {
+        // If a "delete" button is found, attach an event listener to it
+        console.log("found delete button");
+        deleteButton.on('click', function() {
+        // Confirm the delete operation
+            $.ajax('/movies/'+id,{
+                "type": "DELETE",
+            }).done((res)=>{
+                // Redirect the user to the admin page
+                window.location.href = "/admin";
 
+            }).fail((msg)=>{
+                console.log("failed to delete with response ",msg);
+            })
+        });
+    }
+    });
+
+}
 function loadMovieData(){
     $.ajax('/api/movies-list',{
         "type":"GET",
@@ -308,7 +332,7 @@ function loadMovieData(){
                     </div>
                     <div class="modal-footer">
                         <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                        <input type="submit" class="btn btn-danger" value="Delete">
+                        <input type="submit" class="btn btn-danger" value="Delete" id="deleteBtn">
                     </div>
                 </form>
             </div>

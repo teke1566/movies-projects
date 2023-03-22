@@ -34,21 +34,8 @@ router.post('/movie/add', upload.single('profilepic'), (req, res, next) => {
       
     pool.query("select max(movie_id) as id from tbl_movies", (error, results) => {
         if (error) throw error;
-        //console.log(results.rows)
-        console.log(file);
         getNextUserId = results.rows[0].id + 1;
-        /*
-            movie_id INT  ,
-            movie_name VARCHAR ( 50 ),
-            movie_desc VARCHAR ( 50 ),
-            movie_cover VARCHAR ( 50 ),
-            movie_link VARCHAR ( 50 ),
-            movie_release_date VARCHAR ( 50 ),
-            movie_view INT,
-            cate_id INT,
-            price_id INT
-        */
-
+       
         if (results.rowCount > 0) {
 
             pool.query("INSERT INTO tbl_movies (movie_id,movie_name,movie_desc,movie_cover, movie_link, movie_release_date, movie_view, cate_id, price_id, theater) VALUES ($1,$2,$3, $4, $5, $6, $7, $8, $9, $10)", [getNextUserId, movie_name, movie_description, file.filename, movie_link, movie_releaseDate,movie_views, movie_category, movie_price , theater ], (error, results) => {
@@ -116,6 +103,17 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
         
     })
 })
+
+router.delete('/movies/:id', (req, res) => {
+    const movieId = req.params.id;
+    pool.query('DELETE FROM tbl_movies WHERE movie_id = $1', [movieId], (error, results) => {
+      if (error) {
+        res.send(error.message);
+      } else {
+        res.status(200).json(`Movie with ID ${movieId} deleted successfully`);
+      }
+    });
+});
 
 router.get('/admin', (req, res, next) => {
     res.sendFile(path.join(__dirname, '../views', 'admin.html'));
