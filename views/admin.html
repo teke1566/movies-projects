@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Movie Details</title>
+<title>Movie Admin</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -16,126 +16,127 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
-$(document).ready(function(){
-    // Activate tooltip
-    $('[data-toggle="tooltip"]').tooltip();
-    
-    // Select/Deselect checkboxes
-    var checkbox = $('table tbody input[type="checkbox"]');
-    $("#selectAll").click(function(){
-        if(this.checked){
-            checkbox.each(function(){
-                this.checked = true;                        
-            });
-        } else{
-            checkbox.each(function(){
-                this.checked = false;                        
-            });
-        } 
-    });
-
-    function fetchCategories(){
-        $.ajax('/api/categories',{
-            "type":"GET",
-        }).done((res)=>{
-            for(let category of res){
-                $('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
-            }
-        })
-    }
-    fetchCategories();
-    
-    loadMovieData();
-    
-});
-function handleEdit(elem){
-    console.log("hello")
-    var movie_id = $(elem).attr("data-movie_id");
-    console.log(movie_id)
-
-}
-
-function handleEdit(elem){
-    let movie_id = $(elem).attr("data-movie_id");
-    let id = parseInt(movie_id);
-    $.ajax('/api/movies/'+id,{
-        "type":"GET",
-    }).done((res)=>{
-        //load movie categories into form
-        $.ajax('/api/categories',{
-            "type":"GET",
-        }).done((res)=>{
-            for(let category of res){
-                $('#editMovieModal').find('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
-            }
-        })
-        let movie = res;
-        //populate the fields using existing data
-        for(let key in movie){
-            if(key =='movie_name') $('#editMovieModal').find('#name').val(movie[key]);
-            else if(key == 'movie_id') $('#editMovieModal').find('#movie_id').val(movie[key]);
-            else if(key == 'movie_desc') $('#editMovieModal').find('#description').val(movie[key]);
-            else if(key == 'movie_link') $('#editMovieModal').find('#link').val(movie[key]);
-            else if(key == 'movie_release_date') $('#editMovieModal').find('#releaseDate').val(movie[key]);
-            else if(key == 'movie_view') $('#editMovieModal').find('#views').val(movie[key]);
-            else if(key == 'price_id') $('#editMovieModal').find('#price').val(movie[key]);
-            else if(key == 'cate_id') $('#editMovieModal').find('#category').val(movie[key]+"");
-            else if(key == 'theater') $('#editMovieModal').find('#theater').val(movie[key]+"");
-        }
-    })
-}
-function handleDelete(elem){
-    let movie_id = $(elem).attr("data-movie_id");
-    let id = parseInt(movie_id);
-    // Find all elements with class "modal" and check if they have a "delete" button
-    $('.modal').each(function() {
-    const deleteButton = $(this).find('#deleteBtn');
-    if (deleteButton) {
-        // If a "delete" button is found, attach an event listener to it
-        deleteButton.on('click', function() {
-        // Confirm the delete operation
-            $.ajax('/movies/'+id,{
-                "type": "DELETE",
-            }).done((res)=>{
-                // Redirect the user to the admin page
-                window.location.href = "/admin";
-
-            }).fail((msg)=>{
-                console.log("failed to delete with response ",msg);
-            })
+    $(document).ready(function(){
+        // Activate tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        // Select/Deselect checkboxes
+        var checkbox = $('table tbody input[type="checkbox"]');
+        $("#selectAll").click(function(){
+            if(this.checked){
+                checkbox.each(function(){
+                    this.checked = true;                        
+                });
+            } else{
+                checkbox.each(function(){
+                    this.checked = false;                        
+                });
+            } 
         });
-    }
+
+        function fetchCategories(){
+            $.ajax('/api/categories',{
+                "type":"GET",
+            }).done((res)=>{
+                for(let category of res){
+                    $('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
+                }
+            })
+        }
+        fetchCategories();
+        
+        loadMovieData();
+        
     });
 
-}
-function loadMovieData(){
-    $.ajax('/api/movies-list',{
-        "type":"GET",
-    }).done((res)=>{
-        console.log(res);
-        for(let movie of res){
-            
-            let row = $('<tr></tr>');
-            
-            let checkbox = $('<td><span class="custom-checkbox"><input type="checkbox" id="checkbox1" name="options[]" value="1"><label for="checkbox1"></label></span></td>');
-            row.append(checkbox);
+    function handleEdit(elem){
+        let movie_id = $(elem).attr("data-movie_id");
+        let id = parseInt(movie_id);
+        $.ajax('/api/movies/'+id,{
+            "type":"GET",
+        }).done((res)=>{
+            //load movie categories into form
+            $.ajax('/api/categories',{
+                "type":"GET",
+            }).done((res)=>{
+                for(let category of res){
+                    $('#editMovieModal').find('#category').append('<option value="'+category.cate_id+'">'+category.cate_name+'</option>');
+                }
+            })
+            let movie = res;
+            //populate the fields using existing data
             for(let key in movie){
+                if(key =='movie_name') $('#editMovieModal').find('#name').val(movie[key]);
+                else if(key == 'movie_id') $('#editMovieModal').find('#movie_id').val(movie[key]);
+                else if(key == 'movie_desc') $('#editMovieModal').find('#description').val(movie[key]);
+                else if(key == 'movie_link') $('#editMovieModal').find('#link').val(movie[key]);
+                else if(key == 'movie_release_date') $('#editMovieModal').find('#releaseDate').val(movie[key]);
+                else if(key == 'movie_view') $('#editMovieModal').find('#views').val(movie[key]);
+                else if(key == 'price_id') $('#editMovieModal').find('#price').val(movie[key]);
+                else if(key == 'cate_id') $('#editMovieModal').find('#category').val(movie[key]+"");
+                else if(key == 'theater') $('#editMovieModal').find('#theater').val(movie[key]+"");
+            }
+        })
+    }
+    function handleDelete(elem){
+        let movie_id = $(elem).attr("data-movie_id");
+        let id = parseInt(movie_id);
+        // Find all elements with class "modal" and check if they have a "delete" button
+        $('.modal').each(function() {
+        const deleteButton = $(this).find('#deleteBtn');
+        if (deleteButton) {
+            // If a "delete" button is found, attach an event listener to it
+            deleteButton.on('click', function() {
+            // Confirm the delete operation
+                $.ajax('/movies/'+id,{
+                    "type": "DELETE",
+                }).done((res)=>{
+                    // Redirect the user to the admin page
+                    window.location.href = "/admin";
+
+                }).fail((msg)=>{
+                    console.log("failed to delete with response ",msg);
+                })
+            });
+        }
+        });
+
+    }
+    function loadMovieData(){
+        $.ajax('/api/movies-list',{
+            "type":"GET",
+        }).done((res)=>{
+            console.log(res);
+            for(let movie of res){
+                
+                let row = $('<tr></tr>');
+                
+                let checkbox = $('<td><span class="custom-checkbox"><input type="checkbox" id="checkbox1" name="options[]" value="1"><label for="checkbox1"></label></span></td>');
+                row.append(checkbox);
+                for(let key in movie){
+                
+                    let d=$('<td>'+movie[key]+'</td>');
+                    row.append(d);
+                    
+                }
+            let actions = $('<td style="display:flex;"><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
             
-                let d=$('<td>'+movie[key]+'</td>');
-                row.append(d);
+            row.append(actions);
+                $('#main').append(row);
                 
             }
-           let actions = $('<td style="display:flex;"><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
-          
-           row.append(actions);
-            $('#main').append(row);
             
-        }
-        
-    }).fail(()=>{
-        console.log("Failed");
-    })
-}
+        }).fail(()=>{
+            console.log("Failed");
+        })
+    }
+    function handleLogout(){
+        $.ajax("/api/logout", {
+            "type":"GET",
+        }).done(res=>{
+            location.reload();
+        })
+    }
 
 
 </script>
@@ -144,13 +145,15 @@ function loadMovieData(){
     <div class="container">
         <div class="table-wrapper">
             <div class="table-title">
-                <div class="row"  >
+                <div class="row" style="display: flex; align-items: center; justify-content: center;" >
                     <div class="col-sm-6">
                         <h2>Manage Movies </b></h2>
                     </div>
-                    <div class="col-sm-6" style=" text-align: center; margin-top: 5px; ">
+                    <div class="col-sm-6">
                         <a href="#addMovieModal" class="btn btn-success" data-toggle="modal"><i class="material-icons"></i> <span>Add New Movie</span></a>
                     </div>
+                    <button class="btn btn-default" style="margin-right: 12px;"><a href="/" style="text-decoration: none;">Home Page</a></button>
+                    <button class="btn btn-danger" onclick="handleLogout()">Logout</button>
                 </div>
                 
             </div>
