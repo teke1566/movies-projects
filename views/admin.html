@@ -125,7 +125,7 @@ function loadMovieData(){
                 row.append(d);
                 
             }
-           let actions = $('<td><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
+           let actions = $('<td style="display:flex;"><a href="#editMovieModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" data-movie_id="'+movie.movie_id +'" onclick="handleEdit(this)" title="Edit">&#xE254;</i></a> <a href="#deleteMovieModal" class="delete" data-toggle="modal"><i class="material-icons" onclick="handleDelete(this)" data-movie_id="'+movie.movie_id +'" data-toggle="tooltip" title="Delete">&#xE872;</i></a></td>');
           
            row.append(actions);
             $('#main').append(row);
@@ -213,10 +213,6 @@ function loadMovieData(){
                             <input type="date" name="releaseDate" id="releaseDate" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Views </label>
-                            <input type="number" name="views" id="views"class="form-control" required>
-                        </div>
-                        <div class="form-group">
                             <label>Theator </label>
                             <select name="theater" id="theater" class="form-control">
                                 <option value="1">theater 1</option>
@@ -279,10 +275,6 @@ function loadMovieData(){
                         <div class="form-group">
                             <label>Release Date</label>
                             <input type="date" name="releaseDate" id="releaseDate" class="form-control" >
-                        </div>
-                        <div class="form-group">
-                            <label>Views </label>
-                            <input type="number" name="views" id="views"class="form-control" >
                         </div>
                         <div class="form-group">
                             <label>Theator </label>

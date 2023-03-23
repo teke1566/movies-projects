@@ -24,7 +24,7 @@ router.post('/movie/add', upload.single('profilepic'), (req, res, next) => {
     let file = req.file;
     let movie_link = req.body.link;
     let movie_releaseDate = req.body.releaseDate;
-    let movie_views = req.body.views;
+    let movie_views = 0;
     let movie_category = parseInt(req.body.category);
     let movie_price = req.body.price;
     let theater = parseInt(req.body.theater);
@@ -57,7 +57,6 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
     let file = req.file;
     let movie_link = req.body.link;
     let movie_releaseDate = req.body.releaseDate;
-    let movie_views = req.body.views;
     let movie_category = parseInt(req.body.category);
     let movie_price = req.body.price;
     let theater = parseInt(req.body.theater);
@@ -74,8 +73,8 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
         if (results.rowCount > 0) {
             //update image if image exists 
             if(file){
-                pool.query("UPDATE tbl_movies SET movie_name=$1,movie_desc=$2, movie_link=$3, movie_release_date=$4, movie_view=$5, cate_id=$6,  price_id=$7, theater=$8 where movie_id=$9", 
-                [movie_name, movie_description, movie_link, movie_releaseDate,movie_views, movie_category, movie_price , theater, movieId ], (error, results) => {
+                pool.query("UPDATE tbl_movies SET movie_name=$1,movie_desc=$2, movie_link=$3, movie_release_date=$4, cate_id=$5,  price_id=$6, theater=$7 where movie_id=$8", 
+                [movie_name, movie_description, movie_link, movie_releaseDate, movie_category, movie_price , theater, movieId ], (error, results) => {
                     if (error) {
                         res.send(error.message);    
                     }
@@ -86,7 +85,7 @@ router.post('/movie/update', upload.single('profilepic'), (req, res, next) => {
                 })
             }
             else{
-                pool.query("UPDATE tbl_movies SET movie_name=$1, movie_desc=$2, movie_link=$3, movie_release_date=$4, movie_view=$5, cate_id=$6, price_id=$7, theater=$8 WHERE movie_id=$9", [movie_name, movie_description, movie_link, movie_releaseDate, movie_views, movie_category, movie_price, theater, movieId], (error, results) => {
+                pool.query("UPDATE tbl_movies SET movie_name=$1, movie_desc=$2, movie_link=$3, movie_release_date=$4, cate_id=$5, price_id=$6, theater=$7 WHERE movie_id=$8", [movie_name, movie_description, movie_link, movie_releaseDate, movie_category, movie_price, theater, movieId], (error, results) => {
                     if (error) {
                         res.send(error.message);
                     } else {
