@@ -29,7 +29,6 @@
         }
         var newURL = "";
         var htmlLogin = "";
-        // $("#checkLogIn").remove();
         if (
             getFirstNm != undefined &&
             getLastNm != undefined &&
@@ -65,66 +64,27 @@
 
     function loadMovieData() {
 
-        $.ajax("/api/movies", {
-            type: "get",
+        $.ajax('/api/movies', {
+            "type": "get",
+        }).done((res) => {
+            categories = getUniqueCategorieName(res);
+            for (let category of categories) {
+                let dataRow = $('<div class="dataRowMovie ' + category + '"></div>')
+                let p = $('<a href="/type/' + category + '" style="text-decoration: none;"><p class="movieCategory" data-category="' + category + '" >' + category[0].toUpperCase() + category.slice(1) + '</p></a>');
+                dataRow.append(p);
+                let container = $('<div class="grid-container" id="' + category + '"></div>');
+                dataRow.append(container);
+                $('.movie-list').append(dataRow);
+
+                console.log(category);
+                getDataHome(category)
+            }
+
+
+
+        }).fail(() => {
+            console.log("fail");
         })
-            .done((res) => {
-                categories = getUniqueCategorieName(res);
-                for (let category of categories) {
-                    let dataRow = $(
-                        '<div class="dataRowMovie ' + category + '"></div>'
-                    );
-                    let p = $(
-                        '<p class="movieCategory" data-category="' +
-                        category +
-                        '" onclick="filterCategories(this)">' +
-                        category[0].toUpperCase() +
-                        category.slice(1) +
-                        "</p>"
-                    );
-                    dataRow.append(p);
-                    let container = $(
-                        '<div class="grid-container" id="' + category + '"></div>'
-                    );
-                    dataRow.append(container);
-                    $(".movie-list").append(dataRow);
-                }
-
-                $.ajax('/api/movies', {
-                    "type": "get",
-                }).done((res) => {
-                    categories = getUniqueCategorieName(res);
-                    for (let category of categories) {
-                        let dataRow = $('<div class="dataRowMovie ' + category + '"></div>')
-                        let p = $('<a href="/type/' + category + '" style="text-decoration: none;"><p class="movieCategory" data-category="' + category + '" >' + category[0].toUpperCase() + category.slice(1) + '</p></a>');
-                        dataRow.append(p);
-                        let container = $('<div class="grid-container" id="' + category + '"></div>');
-                        dataRow.append(container);
-                        $('.movie-list').append(dataRow);
-
-                        console.log(category);
-                        getDataHome(category)
-                    }
-
-                })
-                // for (let movie of res) {
-                //     let container = $('#' + movie.cate_name);
-                //     //  console.log(movie.cate_name + " / " +categories)
-                //     let card = $('<div class="cards"></div>');
-                //     let img = $('<img src="/Images/' + movie.movie_cover + '" />');
-                //     let time = $('<div class="timeShow"> <span> Last episode' + movie.movie_release_date + '</span></div>');
-                //     let name = $('<div><strong>' + movie.movie_name + '</strong></div>');
-                //     let btn = $('<div class="btnDownload"><a href="/movie/' + movie.movie_id + '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>');
-                //     card.append(img);
-                //     card.append(time);
-                //     card.append(name);
-                //     card.append(btn);
-                //     container.append(card);
-                // }
-
-            }).fail(() => {
-                console.log("fail");
-            })
     }
 
 
@@ -151,30 +111,6 @@
             }
 
 
-            for (let movie of res) {
-                let container = $("#" + movie.cate_name);
-                //  console.log(movie.cate_name + " / " +categories)
-                let card = $('<div class="cards"></div>');
-                let img = $('<img src="/Images/' + movie.movie_cover + '" />');
-                let time = $(
-                    '<div class="timeShow"> <span> Last episode ' +
-                    movie.movie_release_date +
-                    "</span></div>"
-                );
-                let name = $(
-                    "<div><strong>" + movie.movie_name + "</strong></div>"
-                );
-                let btn = $(
-                    '<div class="btnDownload"><a href="/movie/' +
-                    movie.movie_id +
-                    '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>'
-                );
-                card.append(img);
-                card.append(time);
-                card.append(name);
-                card.append(btn);
-                container.append(card);
-            }
         })
 
             .fail(() => {
@@ -182,10 +118,6 @@
             });
 
     }
-
-
-
-
 
 
     function loadCategoryData() {
@@ -196,7 +128,6 @@
                 categories = res;
                 let u = $("<ul></ul>");
                 for (let category of res) {
-                    // u.append('<li><a href="#" data-category="'+category.cate_name+'" onclick="filterCategories(this)">'+category.cate_name+'</a></li>')
                     u.append(
                         '<li><a href="/type/' +
                         category.cate_name +
