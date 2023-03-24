@@ -53,7 +53,7 @@ router.post('/api/login', async (req, res, next) => {
                     res.cookie("role_id", results.rows[0].role_id)
                     res.cookie("firstNm", results.rows[0].firstname);
                     res.cookie("lastNm", results.rows[0].lastname)
-
+                    res.cookie("isAuthenticated", true);
                     if (results.rows[0].role_id == 1) {
                         res.send("Success for admin")
                     } else {
@@ -76,7 +76,15 @@ router.get('/login', (req, res, next) => {
 
     res.sendFile(path.join(__dirname, "../views", 'login.html'))
 })
-
+router.get('/api/logout', (req, res, next) => {
+    res.clearCookie('isAuthenticated');
+    res.clearCookie('userID');
+    res.clearCookie('email');
+    res.clearCookie('role_id');
+    res.clearCookie('firstNm');
+    res.clearCookie('lastNm');
+    res.status(200).send("logged out successfully");
+})
 
 
 router.post('/api/register', async (req, res, next) => {
@@ -113,7 +121,6 @@ router.post('/api/register', async (req, res, next) => {
                 if (results.rowCount > 0) {
                     console.log("56456")
                     res.send("success")
-
                 }
             })
         }

@@ -236,3 +236,15 @@
 .nav li a:hover{
 	color: rgb(136, 121, 121);
 }
+
+.logoutBtn{
+	background-color: red;
+	margin-left: 10px;
+	border: none;
+	border-radius: 2px;
+	cursor: pointer;
+}
+.logoutBtn:hover{
+	background-color: orange;
+	color: white;
+}

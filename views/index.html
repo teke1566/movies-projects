@@ -11,6 +11,8 @@
     <script type="text/javascript"
         src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    
 </head>
 
 <script>
@@ -29,7 +31,7 @@
         var htmlLogin = "";
         // $("#checkLogIn").remove();
         if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
-            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>' +'<button class="logoutBtn" onclick="handleLogout()">Logout</button>';
             $("#checkLogIn").append(htmlLogin);
             newURL = "/history/ticket/";
 
@@ -43,14 +45,23 @@
         loadCategoryData()
         loadMovieData();
     });
-    function loadMovieData() {
-        $.ajax('/api/movies', {
-            "type": "get",
-        }).done((res) => {
-            categories = getUniqueCategorieName(res);
-            for (let category of categories) {
-                let dataRow = $('<div class="dataRowMovie ' + category + '"></div>')
-                let p = $('<a href="/type/' + category + '" style="text-decoration: none;"><p class="movieCategory" data-category="' + category + '" >' + category[0].toUpperCase() + category.slice(1) + '</p></a>');
+        
+    function handleLogout(){
+        $.ajax("/api/logout", {
+            "type":"GET",
+        }).done(res=>{
+            location.reload();
+        })
+    }
+
+    function loadMovieData(){
+        $.ajax('/api/movies',{
+            "type":"get",
+        }).done((res)=>{
+           categories = getUniqueCategorieName(res);
+           for(let category of categories){
+                let dataRow = $('<div class="dataRowMovie '+category+'"></div>')
+                let p = $('<p class="movieCategory" data-category="'+category+'" onclick="filterCategories(this)">'+ category[0].toUpperCase()+category.slice(1)+'</p>');
                 dataRow.append(p);
                 let container = $('<div class="grid-container" id="' + category + '"></div>');
                 dataRow.append(container);
@@ -58,10 +69,6 @@
 
 
             }
-
-
-
-
 
             for (let movie of res) {
                 let container = $('#' + movie.cate_name);
@@ -78,8 +85,7 @@
                 container.append(card);
             }
 
-        })
-            .fail(() => {
+        }).fail(() => {
                 console.log("fail");
             })
     }

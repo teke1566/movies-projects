@@ -116,7 +116,16 @@ router.delete('/movies/:id', (req, res) => {
 });
 
 router.get('/admin', (req, res, next) => {
-    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+    if(req.cookies.isAuthenticated){
+        if(req.cookies.userID == 1){
+            res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+        }
+        else{
+            res.redirect("/");
+        }
+    }else{
+        res.redirect('/login');
+    }
 })
 
 
