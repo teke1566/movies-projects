@@ -83,6 +83,7 @@ router.get('/api/logout', (req, res, next) => {
     res.clearCookie('role_id');
     res.clearCookie('firstNm');
     res.clearCookie('lastNm');
+    res.clearCookie('cookieTicket');
     res.status(200).send("logged out successfully");
 })
 

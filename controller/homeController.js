@@ -51,7 +51,7 @@ router.get('/api/movies/:id', async (req, res)=>{
 
 router.get('/api/moviebycate/:type', (req, res)=>{
 	const typeMovie = req.params.type;
-    pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id where b.cate_name = ($1) limit 5",[typeMovie], (error, results)=>{
+    pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id where b.cate_name = ($1) order by a.movie_id desc limit 5",[typeMovie], (error, results)=>{
         if(error) throw error;
         res.send(results.rows);
     })

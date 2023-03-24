@@ -88,7 +88,7 @@ router.get('/api/category/:cate', (req, res, next) => {
     
     console.log(keySearch);//
 
-    pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id where b.cate_name = ($1)", [keySearch], (error, results) => {
+    pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id where b.cate_name = ($1) order by a.movie_id desc", [keySearch], (error, results) => {
         if (error) throw error;
         
         console.log(results.rows)

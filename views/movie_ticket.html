@@ -22,16 +22,18 @@
 
         var htmlLogin = "";
         // $("#checkLogIn").remove();
+        var newURL ="";
         if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
             htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>' + '<button class="logoutBtn" onclick="handleLogout()">Logout</button>';
             $("#checkLogIn").append(htmlLogin);
+            newURL = "/history/ticket/";
         } else {
-
+            newURL = "/login";
             htmlLogin = '<a href="/login" style="color: white;">Login</a>';
             $("#checkLogIn").append(htmlLogin);
         }
         console.log("getMyTicket" + getMyTicket)
-
+        $("#linkCart").attr("href", newURL);
         if (getMyTicket == "" || getMyTicket == undefined) {
             hideTicketInfor();
         } else {
@@ -144,11 +146,12 @@
         }).done((res) => {
             var html_tr = "";
             console.log(res)
+            var noOfMo=1;
             for (var i = 0; i < res.length; i++) {
-
+                
 
                 html_tr += '<tr>' +
-                    '<td>' + res[i].tickets_id + '</td>' +
+                    '<td>' + noOfMo + '</td>' +
                     '<td>' + res[i].movie_name + '</td>' +
                     '<td>' + res[i].theater + '</td>' +
                     '<td>' + res[i].seatno + '</td>' +
@@ -157,13 +160,14 @@
                     '<td>%' + res[i].discount + '</td>' +
                     '<td>$' + res[i].totalprice + '</td>' +
                     '</tr>'
+                noOfMo++;
             }
 
 
 
             if (res.length == 0) {
                 html_tr += '<tr>' +
-                    '<td  colspan="9">No history record</td>' +
+                    '<td  colspan="8">No history record</td>' +
                     '</tr>'
             }
             $("#dataHirstoryRecord").append(html_tr);

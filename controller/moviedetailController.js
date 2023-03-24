@@ -64,13 +64,13 @@ router.get('/api/filter/:key', (req, res, next) => {
 
     if (keySearch == "all") {
         console.log("jd")
-        pool.query("select * from tbl_movies", (error, results) => {
+        pool.query("select * from tbl_movies order by movie_id desc", (error, results) => {
             if (error) throw error;
             console.log(results.rows)
             res.send(results.rows);
         })
     } else {
-        pool.query("select * from tbl_movies where movie_name like '%' || $1 || '%'", [keySearch], (error, results) => {
+        pool.query("select * from tbl_movies where movie_name Ilike '%' || $1 || '%'", [keySearch], (error, results) => {
             if (error) throw error;
             // res.status(200).json(results.rows);
             console.log(results.rows)

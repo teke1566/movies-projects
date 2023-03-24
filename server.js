@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.listen(80, (req, res, next) => {
-	console.log("server is running on port 3000");
+	console.log("server is running on port 80");
 });
 
 app.use(adminRoute);
