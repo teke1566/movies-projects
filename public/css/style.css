@@ -12,17 +12,11 @@
 }
 
 .logo {
-	width: 10%;
-	height: auto;
+	margin-left: -120px;
 	float: left;
 }
 
-.logo img {
-	max-width: 100%;
-	height: auto;
 
-	margin-top: 20px;
-}
 
 .nav {
 	display: inline-block;

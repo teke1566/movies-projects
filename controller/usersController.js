@@ -132,22 +132,76 @@ router.post('/api/register', async (req, res, next) => {
 
 router.get('/register', (req, res, next) => {
 
-    if(!req.cookies.userID){
-     res.redirect('/login')
-     return
-    }
+   
     
     res.sendFile(path.join(__dirname, "../views", 'register.html'))
 })
-router.get('/admin', (req, res, next) => {
-    if(!req.cookies.userID){
-        res.redirect('/login')
-        return
-       }
-    res.sendFile(path.join(__dirname, '../views', 'admin.html'));
-})
+router.get('/admin', (req, res, next) => { 
+    if(req.cookies.isAuthenticated){ 
+        if(req.cookies.userID == 1){ 
+            res.sendFile(path.join(__dirname, '../views', 'admin.html')
+            );
+         } else{ 
+            res.redirect("/");
+         } }else{ res.redirect('/login');
+         } })
 router.use((req, res, next) => {
-    const err = new Error('404 NOT FOUND PAGE');
+    const err = new Error(`
+    <html>
+    <head>
+        <title>404 Not Found</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f2f2f2;
+            }
+    
+            .container {
+                width: 80%;
+                max-width: 600px;
+                margin: 0 auto;
+                text-align: center;
+                padding-top: 100px;
+            }
+    
+            h1 {
+                font-size: 5em;
+                color: #333;
+                margin-bottom: 0;
+            }
+    
+            p {
+                font-size: 1.5em;
+                color: #666;
+                margin-top: 0;
+            }
+    
+            .btn {
+                display: inline-block;
+                background-color: #007bff;
+                color: #fff;
+                padding: 10px 20px;
+                border-radius: 5px;
+                text-decoration: none;
+                margin-top: 20px;
+                font-size: 1.2em;
+                transition: all 0.3s ease;
+            }
+    
+            .btn:hover {
+                background-color: #0062cc;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>404</h1>
+            <p>Oops! The page you are looking for cannot be found.</p>
+            <a href="/" class="btn">Go to homepage</a>
+        </div>
+    </body>
+    </html>
+    `);
     err.status = 404;
     next(err);
   });
