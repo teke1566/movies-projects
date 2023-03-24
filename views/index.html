@@ -1,277 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movies</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script
-      type="text/javascript"
-      src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
-    ></script>
+    <script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
-    <script
-      type="text/javascript"
-      src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"
-    ></script>
-  </head>
+    <script type="text/javascript"
+        src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+</head>
 
-  <script>
+<script>
     let categories = [];
     $(document).ready(() => {
-      var getMyTicket = $.cookie("cookieTicket");
-      var getFirstNm = $.cookie("firstNm");
-      var getLastNm = $.cookie("lastNm");
-      var getRoleId = $.cookie("role_id");
-      if (getMyTicket == "" || getMyTicket == undefined) {
-        $(".numCart").text("0");
-      } else {
-        $(".numCart").text("1");
-      }
-      var newURL = "";
-      var htmlLogin = "";
-      // $("#checkLogIn").remove();
-      if (
-        getFirstNm != undefined &&
-        getLastNm != undefined &&
-        getRoleId != undefined
-      ) {
-        htmlLogin =
-          '<a style="color: white;">' +
-          getFirstNm +
-          " " +
-          getLastNm +
-          "</a>" +
-          '<button class="logoutBtn" onclick="handleLogout()">Logout</button>';
-        $("#checkLogIn").append(htmlLogin);
-        newURL = "/history/ticket/";
-      } else {
-        newURL = "/login";
-        htmlLogin = '<a href="/login" style="color: white;">Login</a>';
-        $("#checkLogIn").append(htmlLogin);
-      }
-      $("#linkCart").attr("href", newURL);
+        var getMyTicket = $.cookie("cookieTicket");
+        var getFirstNm = $.cookie("firstNm");
+        var getLastNm = $.cookie("lastNm");
+        var getRoleId = $.cookie("role_id");
+        if (getMyTicket == "" || getMyTicket == undefined) {
+            $(".numCart").text("0");
+        } else {
+            $(".numCart").text("1");
+        }
+        var newURL = "";
+        var htmlLogin = "";
+        // $("#checkLogIn").remove();
+        if (
+            getFirstNm != undefined &&
+            getLastNm != undefined &&
+            getRoleId != undefined
+        ) {
+            htmlLogin =
+                '<a style="color: white;">' +
+                getFirstNm +
+                " " +
+                getLastNm +
+                "</a>" +
+                '<button class="logoutBtn" onclick="handleLogout()">Logout</button>';
+            $("#checkLogIn").append(htmlLogin);
+            newURL = "/history/ticket/";
+        } else {
+            newURL = "/login";
+            htmlLogin = '<a href="/login" style="color: white;">Login</a>';
+            $("#checkLogIn").append(htmlLogin);
+        }
+        $("#linkCart").attr("href", newURL);
 
-      loadCategoryData();
-      loadMovieData();
+        loadCategoryData();
+        loadMovieData();
     });
 
     function handleLogout() {
-      $.ajax("/api/logout", {
-        type: "GET",
-      }).done((res) => {
-        location.reload();
-      });
+        $.ajax("/api/logout", {
+            type: "GET",
+        }).done((res) => {
+            location.reload();
+        });
     }
 
     function loadMovieData() {
-      $.ajax("/api/movies", {
-        type: "get",
-      })
-        .done((res) => {
-          categories = getUniqueCategorieName(res);
-          for (let category of categories) {
-            let dataRow = $(
-              '<div class="dataRowMovie ' + category + '"></div>'
-            );
-            let p = $(
-              '<p class="movieCategory" data-category="' +
-                category +
-                '" onclick="filterCategories(this)">' +
-                category[0].toUpperCase() +
-                category.slice(1) +
-                "</p>"
-            );
-            dataRow.append(p);
-            let container = $(
-              '<div class="grid-container" id="' + category + '"></div>'
-            );
-            dataRow.append(container);
-            $(".movie-list").append(dataRow);
-          }
 
-          for (let movie of res) {
-            let container = $("#" + movie.cate_name);
-            //  console.log(movie.cate_name + " / " +categories)
-            let card = $('<div class="cards"></div>');
-            let img = $('<img src="/Images/' + movie.movie_cover + '" />');
-            let time = $(
-              '<div class="timeShow"> <span> Last episode ' +
-                movie.movie_release_date +
-                "</span></div>"
-            );
-            let name = $(
-              "<div><strong>" + movie.movie_name + "</strong></div>"
-            );
-            let btn = $(
-              '<div class="btnDownload"><a href="/movie/' +
-                movie.movie_id +
-                '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>'
-            );
-            card.append(img);
-            card.append(time);
-            card.append(name);
-            card.append(btn);
-            container.append(card);
-          }
+        $.ajax("/api/movies", {
+            type: "get",
         })
-        .fail(() => {
-          console.log("fail");
-        });
+            .done((res) => {
+                categories = getUniqueCategorieName(res);
+                for (let category of categories) {
+                    let dataRow = $(
+                        '<div class="dataRowMovie ' + category + '"></div>'
+                    );
+                    let p = $(
+                        '<p class="movieCategory" data-category="' +
+                        category +
+                        '" onclick="filterCategories(this)">' +
+                        category[0].toUpperCase() +
+                        category.slice(1) +
+                        "</p>"
+                    );
+                    dataRow.append(p);
+                    let container = $(
+                        '<div class="grid-container" id="' + category + '"></div>'
+                    );
+                    dataRow.append(container);
+                    $(".movie-list").append(dataRow);
+                }
+
+                $.ajax('/api/movies', {
+                    "type": "get",
+                }).done((res) => {
+                    categories = getUniqueCategorieName(res);
+                    for (let category of categories) {
+                        let dataRow = $('<div class="dataRowMovie ' + category + '"></div>')
+                        let p = $('<a href="/type/' + category + '" style="text-decoration: none;"><p class="movieCategory" data-category="' + category + '" >' + category[0].toUpperCase() + category.slice(1) + '</p></a>');
+                        dataRow.append(p);
+                        let container = $('<div class="grid-container" id="' + category + '"></div>');
+                        dataRow.append(container);
+                        $('.movie-list').append(dataRow);
+
+                        console.log(category);
+                        getDataHome(category)
+                    }
+
+                })
+                // for (let movie of res) {
+                //     let container = $('#' + movie.cate_name);
+                //     //  console.log(movie.cate_name + " / " +categories)
+                //     let card = $('<div class="cards"></div>');
+                //     let img = $('<img src="/Images/' + movie.movie_cover + '" />');
+                //     let time = $('<div class="timeShow"> <span> Last episode' + movie.movie_release_date + '</span></div>');
+                //     let name = $('<div><strong>' + movie.movie_name + '</strong></div>');
+                //     let btn = $('<div class="btnDownload"><a href="/movie/' + movie.movie_id + '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>');
+                //     card.append(img);
+                //     card.append(time);
+                //     card.append(name);
+                //     card.append(btn);
+                //     container.append(card);
+                // }
+
+            }).fail(() => {
+                console.log("fail");
+            })
     }
+
+
+    function getDataHome(category) {
+
+        $.ajax('/api/moviebycate/' + category, {
+            "type": "get",
+        }).done((res) => {
+            console.log(res)
+
+            for (let movie of res) {
+                let container = $('#' + movie.cate_name);
+                //  console.log(movie.cate_name + " / " +categories)
+                let card = $('<div class="cards"></div>');
+                let img = $('<img src="/Images/' + movie.movie_cover + '" />');
+                let time = $('<div class="timeShow"> <span> Last episode' + movie.movie_release_date + '</span></div>');
+                let name = $('<div><strong>' + movie.movie_name + '</strong></div>');
+                let btn = $('<div class="btnDownload"><a href="/movie/' + movie.movie_id + '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>');
+                card.append(img);
+                card.append(time);
+                card.append(name);
+                card.append(btn);
+                container.append(card);
+            }
+
+
+            for (let movie of res) {
+                let container = $("#" + movie.cate_name);
+                //  console.log(movie.cate_name + " / " +categories)
+                let card = $('<div class="cards"></div>');
+                let img = $('<img src="/Images/' + movie.movie_cover + '" />');
+                let time = $(
+                    '<div class="timeShow"> <span> Last episode ' +
+                    movie.movie_release_date +
+                    "</span></div>"
+                );
+                let name = $(
+                    "<div><strong>" + movie.movie_name + "</strong></div>"
+                );
+                let btn = $(
+                    '<div class="btnDownload"><a href="/movie/' +
+                    movie.movie_id +
+                    '" style="color:white; text-decoration: none;"><span>MORE INFO</span></a></div>'
+                );
+                card.append(img);
+                card.append(time);
+                card.append(name);
+                card.append(btn);
+                container.append(card);
+            }
+        })
+
+            .fail(() => {
+                console.log("fail");
+            });
+
+    }
+
+
+
+
+
+
     function loadCategoryData() {
-      $.ajax("/api/categories", {
-        type: "get",
-      })
-        .done((res) => {
-          categories = res;
-          let u = $("<ul></ul>");
-          for (let category of res) {
-            // u.append('<li><a href="#" data-category="'+category.cate_name+'" onclick="filterCategories(this)">'+category.cate_name+'</a></li>')
-            u.append(
-              '<li><a href="/type/' +
-                category.cate_name +
-                '">' +
-                category.cate_name +
-                "</a></li>"
-            );
-          }
-          u.append('<li><a href="#">' + "Contact Us" + "</a></li>");
-          $(".nav").append(u);
+        $.ajax("/api/categories", {
+            type: "get",
         })
-        .fail(() => {
-          console.log("fail");
-        });
+            .done((res) => {
+                categories = res;
+                let u = $("<ul></ul>");
+                for (let category of res) {
+                    // u.append('<li><a href="#" data-category="'+category.cate_name+'" onclick="filterCategories(this)">'+category.cate_name+'</a></li>')
+                    u.append(
+                        '<li><a href="/type/' +
+                        category.cate_name +
+                        '">' +
+                        category.cate_name +
+                        "</a></li>"
+                    );
+                }
+                u.append('<li><a href="#">' + "Contact Us" + "</a></li>");
+                $(".nav").append(u);
+            })
+            .fail(() => {
+                console.log("fail");
+            });
     }
 
-    // function filterCategories(catElem){
-    //     let categorie = $(catElem).attr("data-category");
-    //     console.log(categorie);
-    //     $(".movie-list").children().not("."+categorie).remove();
-    // }
 
     function getUniqueCategorieName(movies) {
-      let names = movies.map((m) => m.cate_name);
-      categories = [...new Set(names)];
-      return categories;
+        let names = movies.map((m) => m.cate_name);
+        categories = [...new Set(names)];
+        return categories;
     }
-  </script>
+</script>
 
-  <style>
+<style>
     .numCart {
-      color: red;
-      position: absolute;
-      right: 25px;
-      top: 15px;
-      font-weight: bold;
+        color: red;
+        position: absolute;
+        right: 25px;
+        top: 15px;
+        font-weight: bold;
     }
-  </style>
+</style>
 
-  <body>
+<body>
     <div class="container">
-      <div class="myHeader">
-        <div class="logo"><img src="/img/logo12.png" width="155px" /></div>
-        <div class="nav"></div>
-        <div class="boxSearch" style="color: white">
-          <label for=""
-            ><a href="/filter/"
-              ><img src="/img/search-icon.png" width="20px" /></a
-          ></label>
-          &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
-          <label for="" id="checkLogIn"></label>&nbsp;&nbsp;
-          <b>|</b> &nbsp;&nbsp;
-          <label for=""
-            ><a href="/history/ticket/" id="linkCart"
-              ><img src="/img/mvoie_cart.png" width="25px" /><span
-                class="numCart"
-                >0</span
-              ></a
-            ></label
-          >
-        </div>
-      </div>
-
-      <div class="myBody">
-        <div class="myContent">
-          <img src="img/1.jpg" width="100%" height="100%" id="content-img" />
+        <div class="myHeader">
+            <div class="logo"><img src="/img/logo12.png" width="155px" /></div>
+            <div class="nav"></div>
+            <div class="boxSearch" style="color: white">
+                <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label>
+                &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for="" id="checkLogIn"></label>&nbsp;&nbsp;
+                <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/history/ticket/" id="linkCart"><img src="/img/mvoie_cart.png"
+                            width="25px" /><span class="numCart">0</span></a></label>
+            </div>
         </div>
 
-        <div class="movie-list"></div>
-      </div>
+        <div class="myBody">
+            <div class="myContent">
+                <img src="img/1.jpg" width="100%" height="100%" id="content-img" />
+            </div>
 
-      <div class="footer">
-        <div class="flex-container">
-          <div class="flex-item-left">
-            <h4>About Us</h4>
-            <p style="text-align: justify">
-              We are an online database of information related to films,
-              television series, podcasts, home videos, video games, and
-              streaming content online – including cast, production crew and
-              personal biographies, plot summaries, trivia, ratings, and fan and
-              critical reviews.
-            </p>
+            <div class="movie-list"></div>
+        </div>
 
-            <h5>Tel: +123456789</h5>
-            <h5>Email: info@moviesite.com</h5>
+        <div class="footer">
+            <div class="flex-container">
+                <div class="flex-item-left">
+                    <h4>About Us</h4>
+                    <p style="text-align: justify">
+                        We are an online database of information related to films,
+                        television series, podcasts, home videos, video games, and
+                        streaming content online – including cast, production crew and
+                        personal biographies, plot summaries, trivia, ratings, and fan and
+                        critical reviews.
+                    </p>
 
+                    <h5>Tel: +123456789</h5>
+                    <h5>Email: info@moviesite.com</h5>
+
+                    <div>
+                        <span class="boxEmail"> Enter your Email</span>
+                        <span class="boxEmail" style="background-color: rgb(241 150 1); color: white">
+                            Send</span>
+                    </div>
+                </div>
+                <div class="flex-item-center">
+                    <h4>Developed By</h4>
+                    <ul>
+                        <li>Name: <strong>Phearun Phin</strong></li>
+                        <li>Name: <strong>Kevin Chemutai</strong></li>
+                        <li>Name: <strong>Meseret Yihun Amare</strong></li>
+                        <li>Name: <strong>Teketsel Mengistu Beyene</strong></li>
+                    </ul>
+
+                    <h4>Latest Tweet</h4>
+                    <ol>
+                        <li>
+                            Prepare for eye-popping, jaw-dropping, non-stopping fun! ⚡️
+                            SHAZAM! FURY OF THE GODS – now playing only in theaters. Get
+                            tickets now
+                        </li>
+                        <li>
+                            Actors - What one word would you say describes your character?
+                            Writer(s) - What's your inspiration for these movies?
+                        </li>
+                        <li>
+                            What are some of the things you and your character have in
+                            common? #MovieNight
+                        </li>
+                    </ol>
+                </div>
+                <div class="flex-item-right">
+                    <h4>Top Movies</h4>
+
+                    <div class="grid-movies">
+                        <div class="movies1"><img src="img/m12.jpg" /></div>
+                        <div class="movies2"><img src="img/m5.jpg" /></div>
+                        <div class="movies3"><img src="img/m7.jpg" /></div>
+                        <div class="movies4"><img src="img/m13.jpg" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
             <div>
-              <span class="boxEmail"> Enter your Email</span>
-              <span
-                class="boxEmail"
-                style="background-color: rgb(241 150 1); color: white"
-              >
-                Send</span
-              >
+                <div class="nav"></div>
+                <div class="boxSearch">
+                    <img src="img/logo12.png" width="100px" />
+                </div>
             </div>
-          </div>
-          <div class="flex-item-center">
-            <h4>Developed By</h4>
-            <ul>
-              <li>Name: <strong>Phearun Phin</strong></li>
-              <li>Name: <strong>Kevin Chemutai</strong></li>
-              <li>Name: <strong>Meseret Yihun Amare</strong></li>
-              <li>Name: <strong>Teketsel Mengistu Beyene</strong></li>
-            </ul>
-
-            <h4>Latest Tweet</h4>
-            <ol>
-              <li>
-                Prepare for eye-popping, jaw-dropping, non-stopping fun! ⚡️
-                SHAZAM! FURY OF THE GODS – now playing only in theaters. Get
-                tickets now
-              </li>
-              <li>
-                Actors - What one word would you say describes your character?
-                Writer(s) - What's your inspiration for these movies?
-              </li>
-              <li>
-                What are some of the things you and your character have in
-                common? #MovieNight
-              </li>
-            </ol>
-          </div>
-          <div class="flex-item-right">
-            <h4>Top Movies</h4>
-
-            <div class="grid-movies">
-              <div class="movies1"><img src="img/m12.jpg" /></div>
-              <div class="movies2"><img src="img/m5.jpg" /></div>
-              <div class="movies3"><img src="img/m7.jpg" /></div>
-              <div class="movies4"><img src="img/m13.jpg" /></div>
-            </div>
-          </div>
         </div>
-
-        <hr />
-        <div>
-          <div class="nav"></div>
-          <div class="boxSearch">
-            <img src="img/logo12.png" width="100px" />
-          </div>
-        </div>
-      </div>
     </div>
-  </body>
+</body>
+
 </html>

@@ -23,9 +23,10 @@
         var htmlLogin = "";
         // $("#checkLogIn").remove();
         if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
-            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
+            htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>' +'<button class="logoutBtn" onclick="handleLogout()">Logout</button>';
             $("#checkLogIn").append(htmlLogin);
             newURL = "/history/ticket/";
+
         } else {
             newURL = "/login";
             htmlLogin = '<a href="/login" style="color: white;">Login</a>';
@@ -116,7 +117,13 @@
 
     }
 
-
+    function handleLogout(){
+        $.ajax("/api/logout", {
+            "type":"GET",
+        }).done(res=>{
+            location.reload();
+        })
+    }
 
 
 
