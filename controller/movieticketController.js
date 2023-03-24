@@ -5,9 +5,14 @@ const path = require('path')
 const pool = require('../db');
 
 
-router.get('/api/ticket/history',(req,res,next)=>{
+router.get('/api/ticket/history/:id',(req,res,next)=>{
 
-    pool.query("select a.tickets_id, a.discount, a.remark, a.seatno, a.showtimes, a.totalprice, b.movie_name, b.theater, b.price_id from tbl_tickets as a  join tbl_movies as b on a.movie_id = b.movie_id join tbl_categories as c on c.cate_id = b.cate_id join tbl_users as d on d.user_id = a.user_id order by a.tickets_id DESC", (error, results) => {
+    const userId = req.params.id;
+   // const userId = '1';
+
+    console.log("userId ::::::::" + userId)
+
+    pool.query("select a.tickets_id, a.discount, a.remark, a.seatno, a.showtimes, a.totalprice, b.movie_name, b.theater, b.price_id from tbl_tickets as a  join tbl_movies as b on a.movie_id = b.movie_id join tbl_categories as c on c.cate_id = b.cate_id join tbl_users as d on d.user_id = a.user_id where a.user_id = ($1) order by a.tickets_id DESC",[userId], (error, results) => {
         if (error) throw error;
        // res.status(200).json(results.rows);
         res.send(results.rows);
@@ -74,6 +79,29 @@ router.post('/api/ticket/add', async (req, res, next) => {
 
     })
 })
+
+
+
+router.get('/api/category/:cate', (req, res, next) => {
+
+    const keySearch = req.params.cate;
+    
+    console.log(keySearch);//
+
+    pool.query("select * from tbl_movies as a join tbl_categories as b on a.cate_id = b.cate_id where b.cate_name = ($1)", [keySearch], (error, results) => {
+        if (error) throw error;
+        
+        console.log(results.rows)
+        res.send(results.rows);
+    })
+
+})
+
+router.get('/type/:cate', (req, res, next) => {
+    res.sendFile(path.join(__dirname, "../views", 'filterbycategory.html'))
+})
+
+
 
 router.get('/history/ticket/', (req, res, next) => {
 

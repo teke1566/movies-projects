@@ -19,9 +19,11 @@
         var getLastNm = $.cookie("lastNm");
         var getRoleId = $.cookie("role_id");
         var getUserId = $.cookie("userID");
-        var newURL ="";
+
         var htmlLogin = "";
         // $("#checkLogIn").remove();
+        
+        var newURL ="";
         if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
             htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
             $("#checkLogIn").append(htmlLogin);
@@ -30,9 +32,9 @@
             newURL = "/login";
             htmlLogin = '<a href="/login" style="color: white;">Login</a>';
             $("#checkLogIn").append(htmlLogin);
-            
         }
         $("#linkCart").attr("href", newURL);
+
         if (getMyTicket == "" || getMyTicket == undefined) {
             $(".numCart").text("0");
         } else {
@@ -41,39 +43,24 @@
         loadCategoryData()
 
 
-        $(".keySearch").keyup(function (event) {
-            if (event.keyCode === 13) {
-                $(".btnSearch").click();
-            }
-        });
-
-        $(".btnSearch").click(function () {
-            var getKeySearch = $(".keySearch").val().trim();
 
 
-            getSearchData(getKeySearch);
-
-
-
-        })
-
-
+        getFilterCateData()
 
     })
 
-    function getSearchData(key) {
+    function getFilterCateData() {
+
+        var urlUpdate = window.location.pathname;
+        var cate = urlUpdate.replace("/type/", "");
 
 
-        if (key == "") {
-            key = "all"
-        }
-        console.log(key)
 
-        $.ajax('/api/filter/' + key, {
+        $.ajax('/api/category/' + cate, {
             "type": "GET",
-            "data": {
-                keyval: key
-            }
+            // "data": {
+            //     keyval: key
+            // }
         }).done(function (res) {
             console.log(res)
 
@@ -84,6 +71,7 @@
             if (res.length > 0) {
                 $(".grid-container").removeClass('nodata')
                 $(".grid-container").removeClass('height500')
+                $('.categoryNm').text(res[0].cate_name)
                 // grid-container
                 for (let i = 0; i < res.length; i++) {
                     console.log(res[i].movie_name)
@@ -97,17 +85,12 @@
 
                 $("#listData").append(htm_div);
 
-            }else{
+            } else {
                 $(".grid-container").addClass('nodata')
             }
 
 
-            // <div class="cards">
-            //     <img src="/Images/1679258975736-m1.jpg" />
-            //     <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-            //     <div><strong>The Good Doctor</strong></div>
-            //     <div class="btnDownload"><span>MORE INFO</span></div>
-            // </div>
+
 
 
         }).fail(function (err) {
@@ -128,7 +111,6 @@
             let u = $("<ul></ul>")
             for (let category of res) {
                 u.append('<li><a href="/type/' + category.cate_name + '">' + category.cate_name + '</a></li>')
-         
             }
             u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
             $(".nav").append(u);
@@ -155,14 +137,6 @@
         font-weight: bold;
     }
 
-    .boxFilter {
-        height: 225px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-    }
-
     .nodata {
         background-image: url("/img/datnotfound.png");
         background-repeat: no-repeat;
@@ -170,11 +144,15 @@
         background-size: 100% 100%;
         height: 500px;
     }
-    .height500{
+
+    .height500 {
         height: 500px;
     }
-
-    
+    .categoryNm{
+        color: white;
+        text-transform: uppercase;
+        padding: 20px 0px 0px 38px;
+    }
 </style>
 
 <body>
@@ -187,58 +165,22 @@
 
             </div>
             <div class="boxSearch" style="color: white;">
-                <label for=""><img src="/img/search-icon.png" width="20px" /></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
+                <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
-                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                <label for=""><a href="/history/ticket/" id="linkCart"><img src="/img/mvoie_cart.png" width="25px" /><span
                             class="numCart">0</span></a></label>
-
-
-
             </div>
 
         </div>
 
         <div class="" style="background-color: #2f363b; border: 5px solid white;">
-
-
-            <div class="boxFilter">
-
-                <div
-                    style="background-color: white;height: 25px;padding: 20px; border-radius: 10px;width: 500px;position: fixed;z-index: 99999 !important;">
-                
-                    <label style="display: flex;align-self: center;">
-                        <input type="text" class="keySearch"
-                            style="width: 500px; height: 29px; border-radius: 5px 0px 0px 5px; border: 1px solid #9c9b9b;"
-                            placeholder="Search" />
-                        <img src="/img/search-icon-black.png" width="25" height="25"
-                            style="border: 1px solid #9999; padding: 3px;  border-radius: 0px 5px 5px 0px; cursor: pointer;"
-                            class="btnSearch" />
-                    </label>
-
-                </div>
-            </div>
-
-            <div>
+            <div style="margin-top: 78px;">
+                <h2 class="categoryNm"></h2>
                 <div class="dataRowMovie">
                     <div class="grid-container height500" style="padding: 0px !important;" id="listData">
-                        <!-- <div class="cards">
-                            <img src="/Images/1679258975736-m1.jpg" />
-                            <div class="timeShow"> <span> Last episode 2023/02/28</span></div>
-                            <div><strong>The Good Doctor</strong></div>
-                            <div class="btnDownload"><span>MORE INFO</span></div>
-                        </div> -->
-                        <!-- <div class="nodata">
-
-                        </div> -->
-
-
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
 
         <div class="footer">

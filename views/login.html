@@ -29,9 +29,9 @@
             }).done(function (data) {
                 console.log(data)
                 if (data == "Success for admin") {
-                    window.location.href = "http://localhost:3000/admin";
+                    window.location.href = "http://localhost/admin";
                 } else if (data == "Success for customer") {
-                    window.location.href = "http://localhost:3000/";
+                    window.location.href = "http://localhost/";
                 } else if (data == "Invalid") {
                     alert("Invalid email or password");
                 }

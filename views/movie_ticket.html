@@ -38,7 +38,7 @@
             $(".numCart").text("1");
         }
         loadCategoryData()
-        loadHistoryRecord()
+        loadHistoryRecord(getUserId)
 
         var ticketInfor = JSON.parse(getMyTicket);
 
@@ -88,7 +88,7 @@
                     console.log(data)
 
                     hideTicketInfor();
-                    loadHistoryRecord() ;
+                    loadHistoryRecord(user_id) ;
 
                 }).fail(function () {
                     console.log("fail");
@@ -117,7 +117,7 @@
             categories = res;
             let u = $("<ul></ul>")
             for (let category of res) {
-                u.append('<li><a href="#">' + category.cate_name + '</a></li>')
+                u.append('<li><a href="/type/' + category.cate_name + '">' + category.cate_name + '</a></li>')
             }
             u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
             $(".nav").append(u);
@@ -127,8 +127,11 @@
     }
 
 
-    function loadHistoryRecord() {
-        $.ajax('/api/ticket/history', {
+    function loadHistoryRecord(user_id) {
+
+        console.log("user_id:::: "+user_id)
+        
+        $.ajax('/api/ticket/history/'+user_id, {
             "type": "get",
         }).done((res) => {
             var html_tr = "";

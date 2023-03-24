@@ -27,16 +27,17 @@
 
         var htmlLogin = "";
         // $("#checkLogIn").remove();
+        var newURL ="";
         if (getFirstNm != undefined && getLastNm != undefined && getRoleId != undefined) {
             htmlLogin = '<a style="color: white;">' + getFirstNm + " " + getLastNm + '</a>';
             $("#checkLogIn").append(htmlLogin);
-
+            newURL = "/history/ticket/";
         } else {
-
+            newURL = "/login";
             htmlLogin = '<a href="/login" style="color: white;">Login</a>';
             $("#checkLogIn").append(htmlLogin);
         }
-
+        $("#linkCart").attr("href", newURL);
         loadCategoryData()
         var currentDate = new Date()
 
@@ -66,7 +67,7 @@
                 var getEmail = $.cookie("email");
                 console.log(getEmail)
                 if (getEmail == undefined) {
-                    window.location.href = "http://localhost:3000/login";
+                    window.location.href = "http://localhost/login";
                 } else {
                     var remark = $("#remark").val().trim();
                     if (remark != "") {
@@ -102,7 +103,7 @@
 
                             if(data == "success"){
                                 
-                                window.location.href = "http://localhost:3000/history/ticket/";
+                                window.location.href = "http://localhost:/history/ticket/";
                             }
 
                             hideTicketInfor();
@@ -309,7 +310,7 @@
             categories = res;
             let u = $("<ul></ul>")
             for (let category of res) {
-                u.append('<li><a href="#">' + category.cate_name + '</a></li>')
+                u.append('<li><a href="/type/'+category.cate_name+'">' + category.cate_name + '</a></li>')
             }
             u.append('<li><a href="#">' + "Contact Us" + '</a></li>')
             $(".nav").append(u);
@@ -419,7 +420,7 @@
             <div class="boxSearch" style="color: white;">
                 <label for=""><a href="/filter/"><img src="/img/search-icon.png" width="20px" /></a></label> &nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
                 <label for="" id="checkLogIn"></label>&nbsp;&nbsp; <b>|</b> &nbsp;&nbsp;
-                <label for=""><a href="/history/ticket/"><img src="/img/mvoie_cart.png" width="25px" /><span
+                <label for=""><a href="/history/ticket/" id="linkCart"><img src="/img/mvoie_cart.png" width="25px" /><span
                             class="numCart">0</span></a></label>
 
 
@@ -680,10 +681,10 @@
 
                     <div class="grid-movies">
 
-                        <div class="movies1"><img src="img/m12.jpg" /></div>
-                        <div class="movies2"><img src="img/m5.jpg" /></div>
-                        <div class="movies3"><img src="img/m7.jpg" /></div>
-                        <div class="movies4"><img src="img/m13.jpg" /></div>
+                        <div class="movies1"><img src="/img/m12.jpg" /></div>
+                        <div class="movies2"><img src="/img/m5.jpg" /></div>
+                        <div class="movies3"><img src="/img/m7.jpg" /></div>
+                        <div class="movies4"><img src="/img/m13.jpg" /></div>
 
                     </div>
                 </div>
